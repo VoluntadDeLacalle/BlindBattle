@@ -11,7 +11,6 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkRunner networkRunner;
     [SerializeField] private NetworkPrefabRef playerPrefab;
     private Dictionary<PlayerRef, NetworkObject> spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
-    
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) 
     {
@@ -36,16 +35,18 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         var data = new NetworkInputData();
 
         if (Input.GetKey(KeyCode.W))
-            data.direction += Vector3.forward;
+            data.direction += spawnedCharacters[runner.LocalPlayer].gameObject.transform.forward;
 
         if (Input.GetKey(KeyCode.S))
-            data.direction += Vector3.back;
+            data.direction += -spawnedCharacters[runner.LocalPlayer].gameObject.transform.forward;
 
         if (Input.GetKey(KeyCode.A))
-            data.direction += Vector3.left;
+            data.direction += -spawnedCharacters[runner.LocalPlayer].gameObject.transform.right;
 
         if (Input.GetKey(KeyCode.D))
-            data.direction += Vector3.right;
+            data.direction += spawnedCharacters[runner.LocalPlayer].gameObject.transform.right;
+
+        data.mouseInput = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
 
         input.Set(data);
     }
