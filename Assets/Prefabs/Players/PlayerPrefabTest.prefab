@@ -336,8 +336,8 @@ MonoBehaviour:
     RotTeleportRadians: 1.5
   gravity: -20
   jumpImpulse: 8
-  acceleration: 20
-  braking: 20
+  acceleration: 30
+  braking: 30
   maxSpeed: 10
   rotationSpeed: 0
   _IsGrounded: 0
@@ -358,8 +358,8 @@ MonoBehaviour:
   _playerRole: 0
   avatar: {fileID: 5914533799899650695}
   FPCamera: {fileID: 2100054104265208482}
-  moveSpeed: 5
-  mouseSensitivity: 120
+  moveSpeed: 3
+  mouseSensitivity: 60
   maxPitchValue: 30
   minPitchValue: -20
 --- !u!1 &8952294751005826423

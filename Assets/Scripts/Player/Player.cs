@@ -22,6 +22,7 @@ public class Player : NetworkBehaviour
     [SerializeField] private float maxPitchValue = 30;
     [SerializeField] private float minPitchValue = -20;
 
+    private float xRotation = 0f;
     private Vector2 mouseInput = Vector2.zero;
 
     private NetworkCharacterControllerPrototype networkCharCon;
@@ -82,37 +83,14 @@ public class Player : NetworkBehaviour
             data.direction.Normalize();
             networkCharCon.Move(moveSpeed * data.direction * Runner.DeltaTime);
 
-            mouseInput = data.mouseInput.normalized;
+            float mouseX = data.mouseInput.x * mouseSensitivity * Runner.DeltaTime;
+            float mouseY = data.mouseInput.y * mouseSensitivity * Runner.DeltaTime;
 
-            transform.localRotation = Quaternion.SlerpUnclamped(transform.localRotation, Quaternion.Euler(0, transform.localRotation.eulerAngles.y + (mouseSensitivity * mouseInput.x), 0), Runner.DeltaTime);
+            xRotation -= mouseY;
+            xRotation = Mathf.Clamp(xRotation, minPitchValue, maxPitchValue);
+
+            FPCamera.gameObject.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
+            transform.Rotate(Vector3.up * mouseX);
         }
-    }
-
-    void LateUpdate()
-    {
-        
-
-        if (true/*playerRole == PlayerRole.Spectator*/)
-        {
-            float currentCameraEulerX = FPCamera.gameObject.transform.localRotation.eulerAngles.x;
-            float finalEulerAngle = currentCameraEulerX - (mouseSensitivity * mouseInput.y * Time.deltaTime);
-            if (finalEulerAngle < 0)
-            {
-                finalEulerAngle = 360 + finalEulerAngle;
-            }
-
-            if (finalEulerAngle < 180)
-            {
-                finalEulerAngle = Mathf.Clamp(finalEulerAngle, Mathf.Max(0, minPitchValue), maxPitchValue);
-            }
-            else
-            {
-                finalEulerAngle = Mathf.Clamp(finalEulerAngle, 360 + Mathf.Min(0, minPitchValue), 360);
-            }
-
-            FPCamera.gameObject.transform.localRotation = Quaternion.Euler(finalEulerAngle, 0, 0);
-        }
-
-        mouseInput = Vector2.zero;
     }
 }
