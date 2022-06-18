@@ -357,7 +357,7 @@ MonoBehaviour:
   _interpolationDataSource: 0
   _playerRole: 0
   avatar: {fileID: 5914533799899650695}
-  FPCamera: {fileID: 2100054104265208482}
+  FPCameraRef: {fileID: 4960689069625951673}
   moveSpeed: 3
   mouseSensitivity: 60
   maxPitchValue: 30
@@ -372,6 +372,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8590021436339815849}
   - component: {fileID: 2100054104265208482}
+  - component: {fileID: 4960689069625951673}
   - component: {fileID: 1562199206028377911}
   m_Layer: 0
   m_Name: FPCamera
@@ -405,7 +406,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.13333334, g: 0.23137257, b: 0.32941177, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -438,6 +439,27 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &4960689069625951673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8952294751005826423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 570a37ad2d5c7714f872ed635afd08df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerCamera: {fileID: 2100054104265208482}
+  nothingLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  everythingLayerMask:
+    serializedVersion: 2
+    m_Bits: 2147483647
+  defaultBackgroundColor: {r: 0.13333334, g: 0.23137257, b: 0.32941177, a: 0}
+  blindBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!81 &1562199206028377911
 AudioListener:
   m_ObjectHideFlags: 0

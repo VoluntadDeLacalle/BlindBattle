@@ -14,7 +14,7 @@ public class Player : NetworkBehaviour
 
     [Header("Player Children Assets")]
     [SerializeField] private GameObject avatar;
-    [SerializeField] private Camera FPCamera;
+    [SerializeField] private PlayerCamera FPCameraRef;
 
     [Header("Player Movement Variables")]
     [SerializeField] private float moveSpeed = 5;
@@ -38,7 +38,7 @@ public class Player : NetworkBehaviour
     {
         if (playerNetworkObject.HasInputAuthority)
         {
-            FPCamera.gameObject.SetActive(true);
+            FPCameraRef.GetPlayerCamera().gameObject.SetActive(true);
             avatar.SetActive(false);
         }
 
@@ -67,12 +67,24 @@ public class Player : NetworkBehaviour
 
                 break;
             case PlayerRole.Fighter:
-                changed.Behaviour.FPCamera.gameObject.transform.localRotation = Quaternion.Euler(Vector3.zero);
+                changed.Behaviour.FPCameraRef.GetPlayerCamera().gameObject.transform.localRotation = Quaternion.Euler(Vector3.zero);
+                changed.Behaviour.xRotation = 0;
+
+                changed.Behaviour.FPCameraRef.ToggleCameraBlindness(true);
 
                 break;
             case PlayerRole.Spectator:
-                
+                changed.Behaviour.FPCameraRef.ToggleCameraBlindness(false);
+
                 break;
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            SwitchPlayerRole(PlayerRole.Fighter);
         }
     }
 
@@ -86,11 +98,15 @@ public class Player : NetworkBehaviour
             float mouseX = data.mouseInput.x * mouseSensitivity * Runner.DeltaTime;
             float mouseY = data.mouseInput.y * mouseSensitivity * Runner.DeltaTime;
 
-            xRotation -= mouseY;
-            xRotation = Mathf.Clamp(xRotation, minPitchValue, maxPitchValue);
-
-            FPCamera.gameObject.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
             transform.Rotate(Vector3.up * mouseX);
+
+            if (playerRole != PlayerRole.Fighter) ///CHANGE THIS TO BE ONLY SPECTATOR ONCE WE HAVE DISABLED FUNCTIONALITY IN.
+            {
+                xRotation -= mouseY;
+                xRotation = Mathf.Clamp(xRotation, minPitchValue, maxPitchValue);
+
+                FPCameraRef.GetPlayerCamera().gameObject.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
+            }
         }
     }
 }
