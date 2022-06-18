@@ -10,7 +10,8 @@ public class NetworkManager : SingletonMonoBehaviour<NetworkManager>
 {
     public NetworkRunner networkRunnerPrefab;
 
-    NetworkRunner networkRunner;
+    [HideInInspector]
+    public NetworkRunner networkRunner;
 
     private new void Awake()
     {

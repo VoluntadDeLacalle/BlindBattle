@@ -14,6 +14,14 @@ public class LobbySceneManager : MonoBehaviour
 
     public TMP_Text messageText;
 
+    public MenuPage roomScreen;
+    public TMP_Text roomTitleText;
+    public TMP_Text team1TitleText;
+    public TMP_Text team2TitleText;
+    public TMP_Text team1ListText;
+    public TMP_Text team2ListText;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,11 +48,16 @@ public class LobbySceneManager : MonoBehaviour
             messageText.text = "Creating room...";
             await NetworkManager.Instance.CreateRoom(roomName);
             messageText.text = "Room created successfully!";
+
+            MoveToRoom();
         }
         catch (Exception err)
         {
-            createButton.interactable = true;
             messageText.text = $"Error: {err.Message}";
+        }
+        finally
+        {
+            createButton.interactable = true;
         }
     }
 
@@ -62,11 +75,27 @@ public class LobbySceneManager : MonoBehaviour
             messageText.text = "Joining room...";
             await NetworkManager.Instance.JoinRoom(roomName);
             messageText.text = "Joined room successfully!";
+
+            MoveToRoom();
         }
         catch (Exception err)
         {
-            joinButton.interactable = true;
             messageText.text = $"Error: {err.Message}";
         }
+        finally
+        {
+            joinButton.interactable = true;
+        }
+    }
+
+    public void MoveToRoom()
+    {
+        roomTitleText.text = $"Room: {NetworkManager.Instance.networkRunner?.SessionInfo.Name}";
+        roomScreen.Show();
+    }
+
+    public void LeaveRoom()
+    {
+        NetworkManager.Instance.networkRunner?.Shutdown();
     }
 }
