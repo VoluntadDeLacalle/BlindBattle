@@ -45,3 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkRunnerPrefab: {fileID: 4539796151212510187, guid: d8a1e5088ad07884ebddcdeef15d2299, type: 3}
+  networkUserPrefab: {fileID: 1502368023289069075, guid: 2a11b5e82fdbf3240909de7921833ab1, type: 3}
+  networkGameStatePrefab: {fileID: 8331591728636345498, guid: 91a2673cd81642a44823e0f0a9f7fb19, type: 3}
+  networkRunner: {fileID: 0}
+  localUserName: 
