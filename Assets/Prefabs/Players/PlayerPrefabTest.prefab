@@ -502,6 +502,8 @@ MonoBehaviour:
   _interpolationDataSource: 0
   shootTransform: {fileID: 8909313572051871962}
   shootDistance: 50
+  gunRicochetPrefab:
+    RawGuidValue: 1927dbbcafcd4964fafbef8e1038574c
 --- !u!114 &1030916115879028195
 MonoBehaviour:
   m_ObjectHideFlags: 0
