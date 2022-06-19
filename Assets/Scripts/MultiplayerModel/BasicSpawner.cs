@@ -5,28 +5,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static Player;
 
 public class BasicSpawner : SingletonMonoBehaviour<BasicSpawner>, INetworkRunnerCallbacks
 {
-    public NetworkRunner networkRunner;
-    [SerializeField] private NetworkPrefabRef playerPrefab;
-    private Dictionary<PlayerRef, NetworkObject> spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
+    public Player playerPrefab;
+    public Dictionary<PlayerRef, Player> spawnedCharacters = new Dictionary<PlayerRef, Player>();
 
-    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) 
+    public Player SpawnPlayer(NetworkRunner runner, PlayerRef playerRef, PlayerRole role) 
     {
-        //player.RawEncoded%runner.Config.Simulation.DefaultPlayers This code gets the current player's queue I suppose from the ref. It is then used to multiply the x to give it a unique position.
-        Vector3 spawnPosition = new Vector3((player.RawEncoded%runner.Config.Simulation.DefaultPlayers) * 3, 1, 0);
-        NetworkObject networkPlayerObject = networkRunner.Spawn(playerPrefab, spawnPosition, Quaternion.identity, player);
+        // TODO: Use spawn points and role to spawn players in the right spots
 
-        spawnedCharacters.Add(player, networkPlayerObject);
+        //player.RawEncoded%runner.Config.Simulation.DefaultPlayers This code gets the current player's queue I suppose from the ref. It is then used to multiply the x to give it a unique position.
+        Vector3 spawnPosition = new Vector3((playerRef.RawEncoded%runner.Config.Simulation.DefaultPlayers) * 3, 1, 0);
+        Player player = runner.Spawn(playerPrefab, spawnPosition, Quaternion.identity, playerRef);
+        player.SwitchPlayerRole(role);
+
+        spawnedCharacters.Add(playerRef, player);
+        return player;
     }
 
-    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
+    public void OnPlayerLeft(NetworkRunner runner, PlayerRef playerRef)
     {
-        if(spawnedCharacters.TryGetValue(player, out NetworkObject networkObject))
+        if(spawnedCharacters.TryGetValue(playerRef, out Player player))
         {
-            networkRunner.Despawn(networkObject);
-            spawnedCharacters.Remove(player);
+            runner.Despawn(player.Object);
+            spawnedCharacters.Remove(playerRef);
         }
     }
 
@@ -45,34 +49,37 @@ public class BasicSpawner : SingletonMonoBehaviour<BasicSpawner>, INetworkRunner
     public void OnSceneLoadDone(NetworkRunner runner) { }
     public void OnSceneLoadStart(NetworkRunner runner) { }
 
-    private void OnGUI()
+    //private void OnGUI()
+    //{
+    //    if (networkRunner == null)
+    //    {
+    //        if (GUI.Button(new Rect(0, 0, 200, 40), "Host"))
+    //        {
+    //            StartGame(GameMode.Host);
+    //        }
+    //        if (GUI.Button(new Rect(0, 40, 200, 40), "Join"))
+    //        {
+    //            StartGame(GameMode.Client);
+    //        }
+    //    }
+    //}
+
+    //async void StartGame(GameMode mode)
+    //{
+    //    networkRunner = gameObject.AddComponent<NetworkRunner>();
+    //    networkRunner.ProvideInput = true;
+
+    //    await networkRunner.StartGame(new StartGameArgs()
+    //    {
+    //        GameMode = mode,
+    //        SessionName = "TestRoom",
+    //        Scene = SceneManager.GetActiveScene().buildIndex,
+    //        SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
+    //    });
+    //}
+
+    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        if (networkRunner == null)
-        {
-            if (GUI.Button(new Rect(0, 0, 200, 40), "Host"))
-            {
-                StartGame(GameMode.Host);
-            }
-            if (GUI.Button(new Rect(0, 40, 200, 40), "Join"))
-            {
-                StartGame(GameMode.Client);
-            }
-        }
+        //
     }
-
-    async void StartGame(GameMode mode)
-    {
-        networkRunner = gameObject.AddComponent<NetworkRunner>();
-        networkRunner.ProvideInput = true;
-
-        await networkRunner.StartGame(new StartGameArgs()
-        {
-            GameMode = mode,
-            SessionName = "TestRoom",
-            Scene = SceneManager.GetActiveScene().buildIndex,
-            SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
-        });
-    }
-
-
 }

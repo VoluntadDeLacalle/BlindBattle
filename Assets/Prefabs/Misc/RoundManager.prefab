@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5959941507894663469}
   - component: {fileID: 5959941507894663468}
+  - component: {fileID: 1219898605951950399}
   - component: {fileID: 1631916059041316164}
   m_Layer: 0
   m_Name: RoundManager
@@ -45,8 +46,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 031f81fd3ef464e409e1f9d146f3cc9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  devRoundManagerConfig:
-    HostOrJoinDevUIPrefab: {fileID: 0}
+--- !u!114 &1219898605951950399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5959941507894663471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fee7fc4b77a0d3c4280f862e68b3c4f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 5914533799947135523, guid: cc99af392c9a6644cb802f0d5568202d, type: 3}
 --- !u!114 &1631916059041316164
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61,7 +73,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomName: LocalDevRoom
   yourName: CoolDev42
+  currentMode: 
   btn_Host: 0
   btn_Join: 0
   btn_StartGame: 0
-  currentGameMode: 

@@ -55,7 +55,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 
     public override void Spawned()
     {
-        BasicSpawner.Instance.networkRunner.AddCallbacks(this);
+        NetworkManager.Instance.networkRunner.AddCallbacks(this);
     }
 
     private void Start()
