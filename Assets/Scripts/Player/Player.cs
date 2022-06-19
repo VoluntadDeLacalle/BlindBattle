@@ -148,7 +148,6 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
                     return;
                 }
                 
-
                 if (raycastHit.Collider != null)
                 {
                     if (raycastHit.Hitbox != null) //Hit a player with a hitbox
@@ -165,7 +164,8 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 
                     }
 
-                    playerGun.SpawnGunRicochet(playerNetworkObject, raycastHit.Point);
+                    Debug.Log("Hit");
+                    playerGun.RPC_SpawnGunRicochet(Object, raycastHit.Point);
                 }
             }
         }

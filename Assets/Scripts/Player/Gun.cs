@@ -7,13 +7,10 @@ public class Gun : NetworkBehaviour
 {
     [SerializeField] private Transform shootTransform;
     public float shootDistance = 50f;
-    public float shootTimer = 4f;
-
-    [Networked] private TickTimer shotLife { get; set; }
-
+    public SimpleTimer shootTimer = new SimpleTimer(4f);
 
     [Header("Prefabs")]
-    [SerializeField] private NetworkPrefabRef gunRicochetPrefab;
+    [SerializeField] private GunRicochet gunRicochetPrefab;
 
     private void OnDrawGizmos()
     {
@@ -28,14 +25,19 @@ public class Gun : NetworkBehaviour
 
     public bool CanShoot()
     {
-        return shotLife.ExpiredOrNotRunning(Runner);
+        return shootTimer.expired;
     }
-    
+
+    private void Update()
+    {
+        shootTimer.Update();
+    }
+
     public bool ShootGun(NetworkObject playerNetworkObject, out LagCompensatedHit raycastHit)
     {
-        if (shotLife.ExpiredOrNotRunning(Runner))
+        if (shootTimer.expired)
         {
-            shotLife = TickTimer.CreateFromSeconds(Runner, shootTimer);
+            shootTimer.Reset();
         }
         else
         {
@@ -46,12 +48,9 @@ public class Gun : NetworkBehaviour
         return Runner.LagCompensation.Raycast(shootTransform.position, ((shootTransform.position + shootTransform.forward) - shootTransform.position).normalized, shootDistance, playerNetworkObject.InputAuthority, out raycastHit, -1, HitOptions.IncludePhysX);
     }
 
-    public void SpawnGunRicochet(NetworkObject playerNetworkObject, Vector3 hitPosition)
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.StateAuthority)]
+    public void RPC_SpawnGunRicochet(NetworkObject playerNetworkObject, Vector3 hitPosition)
     {
-        Runner.Spawn(gunRicochetPrefab, hitPosition, Quaternion.identity, playerNetworkObject.InputAuthority,
-          (runner, o) =>
-          {
-              o.GetComponent<GunRicochet>().Init();
-          });
+        NetworkManager.Instance.networkRunner.Spawn(gunRicochetPrefab, hitPosition, Quaternion.identity);
     }
 }
