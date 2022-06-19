@@ -19,6 +19,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     [SerializeField] private GameObject avatar;
     [SerializeField] private PlayerCamera FPCameraRef;
     [SerializeField] private Gun playerGun;
+    [SerializeField] private NetworkMecanimAnimator networkAnimator;
 
     [Header("Player Movement Variables")]
     [SerializeField] private float moveSpeed = 5;
@@ -89,6 +90,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
         {
             case PlayerRole.Disabled:
                 changed.Behaviour.canMove = false;
+                changed.Behaviour.networkAnimator.SetTrigger("DeathTrigger");
 
                 break;
             case PlayerRole.Fighter:
@@ -118,6 +120,9 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
         if (GetInput(out NetworkInputData data) && canMove)
         {
             ///Movement and Looking
+            Vector3 animationDirection = transform.worldToLocalMatrix * data.direction;
+            networkAnimator.Animator.SetFloat("InputX", animationDirection.x);
+            networkAnimator.Animator.SetFloat("InputZ", animationDirection.z);
             data.direction.Normalize();
             networkCharCon.Move(moveSpeed * data.direction * Runner.DeltaTime);
 
@@ -135,11 +140,14 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
             ///Firing the gun
             if ((data.buttons & NetworkInputData.SPACEBAR) != 0 && playerNetworkObject.HasInputAuthority && playerRole == PlayerRole.Fighter)
             {
+                networkAnimator.SetTrigger("ShootTrigger");
+
                 LagCompensatedHit raycastHit;
                 if (!playerGun.ShootGun(playerNetworkObject, out raycastHit))
                 {
                     return;
                 }
+                
 
                 if (!hitPositionNormalPair.ContainsKey(raycastHit.Point))
                 {
