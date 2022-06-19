@@ -36,18 +36,6 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     private NetworkCharacterControllerPrototype networkCharCon;
     private NetworkObject playerNetworkObject;
 
-    private Dictionary<Vector3, Vector3> hitPositionNormalPair = new Dictionary<Vector3, Vector3>(); 
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.black;
-
-        foreach(KeyValuePair<Vector3, Vector3> entry in hitPositionNormalPair)
-        {
-            Gizmos.DrawLine(entry.Key, (entry.Value - entry.Key));
-        }
-    }
-
     private void Awake()
     {
         networkCharCon = GetComponent<NetworkCharacterControllerPrototype>();
@@ -120,11 +108,12 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
         if (GetInput(out NetworkInputData data) && canMove)
         {
             ///Movement and Looking
-            Vector3 animationDirection = transform.worldToLocalMatrix * data.direction;
-            networkAnimator.Animator.SetFloat("InputX", animationDirection.x);
-            networkAnimator.Animator.SetFloat("InputZ", animationDirection.z);
+            networkAnimator.Animator.SetFloat("InputX", data.direction.x);
+            networkAnimator.Animator.SetFloat("InputZ", data.direction.z);
+
             data.direction.Normalize();
-            networkCharCon.Move(moveSpeed * data.direction * Runner.DeltaTime);
+            Vector3 worldData = transform.localToWorldMatrix * data.direction;
+            networkCharCon.Move(moveSpeed * worldData * Runner.DeltaTime);
 
             float mouseX = data.mouseInput.x * mouseSensitivity * Runner.DeltaTime;
             float mouseY = data.mouseInput.y * mouseSensitivity * Runner.DeltaTime;
@@ -148,11 +137,6 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
                     return;
                 }
                 
-
-                if (!hitPositionNormalPair.ContainsKey(raycastHit.Point))
-                {
-                    //hitPositionNormalPair.Add(raycastHit.Point, raycastHit.Normal);
-                }
 
                 if (raycastHit.Collider != null)
                 {
@@ -193,16 +177,16 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
         var data = new NetworkInputData();
 
         if (Input.GetKey(KeyCode.W))
-            data.direction += transform.forward;
+            data.direction += Vector3.forward;
 
         if (Input.GetKey(KeyCode.S))
-            data.direction += -transform.forward;
+            data.direction += -Vector3.forward;
 
         if (Input.GetKey(KeyCode.A))
-            data.direction += -transform.right;
+            data.direction += -Vector3.right;
 
         if (Input.GetKey(KeyCode.D))
-            data.direction += transform.right;
+            data.direction += Vector3.right;
 
         data.mouseInput = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
 
