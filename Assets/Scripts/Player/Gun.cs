@@ -7,16 +7,13 @@ public class Gun : NetworkBehaviour
 {
     [SerializeField] private Transform shootTransform;
     public float shootDistance = 50f;
-    public int maxAmmo = 15;
-    private int currentAmmo = 0;
+    public float shootTimer = 4f;
+
+    [Networked] private TickTimer shotLife { get; set; }
+
 
     [Header("Prefabs")]
     [SerializeField] private NetworkPrefabRef gunRicochetPrefab;
-
-    private void Awake()
-    {
-        currentAmmo = maxAmmo;
-    }
 
     private void OnDrawGizmos()
     {
@@ -29,38 +26,21 @@ public class Gun : NetworkBehaviour
         }
     }
 
-    public int GetCurrentAmmo()
+    public bool CanShoot()
     {
-        return currentAmmo;
-    }
-
-    public void SetCurrentAmmo(int ammoAmount)
-    {
-        if (ammoAmount <= 0)
-        {
-            currentAmmo = 0;
-        }
-        else if (ammoAmount >= maxAmmo)
-        {
-            currentAmmo = maxAmmo;
-        }
-        else
-        {
-            currentAmmo = ammoAmount;
-        }
-
+        return shotLife.ExpiredOrNotRunning(Runner);
     }
     
     public bool ShootGun(NetworkObject playerNetworkObject, out LagCompensatedHit raycastHit)
     {
-        if (currentAmmo <= 0)
+        if (shotLife.ExpiredOrNotRunning(Runner))
         {
-            raycastHit = new LagCompensatedHit { };
-            return false;
+            shotLife = TickTimer.CreateFromSeconds(Runner, shootTimer);
         }
         else
         {
-            currentAmmo--;
+            raycastHit = new LagCompensatedHit { };
+            return false;
         }
 
         return Runner.LagCompensation.Raycast(shootTransform.position, ((shootTransform.position + shootTransform.forward) - shootTransform.position).normalized, shootDistance, playerNetworkObject.InputAuthority, out raycastHit, -1, HitOptions.IncludePhysX);

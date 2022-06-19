@@ -7,6 +7,7 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField] private Camera playerCamera;
     public LayerMask nothingLayerMask;
     public LayerMask everythingLayerMask;
+    public LayerMask hostLayerMask;
     public Color defaultBackgroundColor;
     public Color deadBackgroundColor;
     public Color blindBackgroundColor;
@@ -22,6 +23,11 @@ public class PlayerCamera : MonoBehaviour
         return playerCamera;
     }
 
+    public void RemoveHostLayer()
+    {
+        playerCamera.cullingMask = everythingLayerMask & ~(1 << hostLayerMask);
+    }
+
     public void ActivateDeadBackgroundColor()
     {
         playerCamera.backgroundColor = deadBackgroundColor;
@@ -29,7 +35,15 @@ public class PlayerCamera : MonoBehaviour
 
     public void ToggleCameraBlindness(bool shouldBlind)
     {
-        playerCamera.cullingMask = shouldBlind ? nothingLayerMask : everythingLayerMask;
+        if (NetworkManager.Instance.IsHost)
+        {
+            playerCamera.cullingMask = shouldBlind ? nothingLayerMask : hostLayerMask;
+        }
+        else
+        {
+            playerCamera.cullingMask = shouldBlind ? nothingLayerMask : everythingLayerMask;
+        }
+
         playerCamera.clearFlags = shouldBlind ? CameraClearFlags.SolidColor : CameraClearFlags.Skybox;
         playerCamera.backgroundColor = shouldBlind ? blindBackgroundColor : defaultBackgroundColor;
     }
