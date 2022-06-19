@@ -86,7 +86,7 @@ public class NetworkManager : SingletonMonoBehaviour<NetworkManager>, INetworkRu
         return networkRunner.StartGame(new StartGameArgs
         {
             // other args...
-            SessionName = sessionName,
+            SessionName = sessionName.ToLower(),
             GameMode = mode,
             SessionProperties = { },
             DisableClientSessionCreation = true,

@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Test/Azee/ArenaTest.unity
     guid: 4848aeca659131a40b6989b966f4d9d5
+  - enabled: 1
+    path: Assets/Scenes/Test/Azee/LoadingScene.unity
+    guid: 71a7579d746bd0c4f95c585e8059f753
   m_configObjects: {}

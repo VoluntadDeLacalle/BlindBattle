@@ -11,7 +11,8 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     {
         Disabled,
         Fighter,
-        Spectator
+        Spectator,
+        Dead,
     };
 
     [Networked(OnChanged = nameof(OnSwitchPlayerRole))] public PlayerRole playerRole { get; set; }
@@ -63,8 +64,6 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
                 avatar.SetActive(false);
             }
         }
-
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     [Rpc(sources: RpcSources.All, targets: RpcTargets.StateAuthority)]
@@ -87,7 +86,6 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
         {
             case PlayerRole.Disabled:
                 changed.Behaviour.canMove = false;
-                changed.Behaviour.networkAnimator.SetTrigger("DeathTrigger");
 
                 break;
             case PlayerRole.Fighter:
@@ -102,6 +100,11 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
                 changed.Behaviour.canMove = true;
 
                 changed.Behaviour.FPCameraRef.ToggleCameraBlindness(false);
+
+                break;
+            case PlayerRole.Dead:
+                changed.Behaviour.canMove = false;
+                changed.Behaviour.networkAnimator.SetTrigger("DeathTrigger");
 
                 break;
         }
@@ -179,10 +182,18 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     [Rpc(sources: RpcSources.All, targets: RpcTargets.StateAuthority)]
     void RPC_Respawn()
     {
+        DieAndRespawn();
+    }
+
+    private async void DieAndRespawn()
+    {
         var playerRef = Object.InputAuthority;
         var curPlayerRole = playerRole;
 
-        RPC_SwitchPlayerRole(PlayerRole.Disabled);
+        RPC_SwitchPlayerRole(PlayerRole.Dead);
+
+        await Task.Delay(TimeSpan.FromSeconds(3));
+
         Runner.Despawn(Object);
 
         BasicSpawner.Instance.SpawnAfterDelay(playerRef, curPlayerRole, 1);

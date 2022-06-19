@@ -24,6 +24,9 @@ public class NetworkGameState : NetworkBehaviour, INetworkRunnerCallbacks
     [Networked]
     public int team2Score { get; set; }
 
+    [Networked]
+    public TickTimer gameTimer { get; set; }
+
     private void Awake()
     {
         if (NetworkManager.Instance.IsHost)
@@ -58,6 +61,11 @@ public class NetworkGameState : NetworkBehaviour, INetworkRunnerCallbacks
         currentRound = 1;
         team1Score = 0;
         team2Score = 0;
+    }
+
+    public void ResetTimer(float seconds)
+    {
+        gameTimer = TickTimer.CreateFromSeconds(Runner, seconds);
     }
 
     public void AddScoreToPlayer(int value, PlayerRef playerRef)
@@ -170,6 +178,19 @@ public class NetworkGameState : NetworkBehaviour, INetworkRunnerCallbacks
         totalRounds = GetBiggerTeamSize();
     }
 
+    public void IncrementRound()
+    {
+        if (currentRound < totalRounds)
+        {
+            currentRound++;
+        }
+    }
+
+    public bool IsLastRound()
+    {
+        return currentRound == totalRounds;
+    }
+
     public int GetBiggerTeamSize()
     {
         var team1Size = GetTeamSize(team1);
@@ -190,7 +211,7 @@ public class NetworkGameState : NetworkBehaviour, INetworkRunnerCallbacks
 
         return validUsers;
     }
-
+    
     private void OnDestroy()
     {
         NetworkManager.Instance.networkRunner?.RemoveCallbacks(this);

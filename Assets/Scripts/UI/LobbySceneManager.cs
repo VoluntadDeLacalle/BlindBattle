@@ -39,6 +39,7 @@ public class LobbySceneManager : MonoBehaviour, INetworkRunnerCallbacks
     void Start()
     {
         originalClientMessageText = clientMessageText.text;
+        HelperUtilities.UpdateCursorLock(false);
     }
 
     // Update is called once per frame

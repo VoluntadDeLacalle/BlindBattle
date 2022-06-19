@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunnerCallbacks
 {
+    public int roundDuration = 60;
+
     public int currentRound => NetworkGameState.Instance.currentRound;
 
     private new void Awake()
@@ -18,12 +20,24 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
     void Start()
     {
         RegisterRunnerCallbacks();
+        HelperUtilities.UpdateCursorLock(true);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!NetworkManager.Instance.networkRunner || !NetworkGameState.Instance)
+        {
+            return;
+        }
 
+        if (NetworkManager.Instance.IsHost)
+        {
+            if (NetworkGameState.Instance.gameTimer.Expired(NetworkManager.Instance.networkRunner))
+            {
+                EndRound();
+            }
+        }
     }
 
     public void RegisterRunnerCallbacks()
@@ -52,6 +66,8 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
 
         SpawnTeam(team1, 1);
         SpawnTeam(team2, 2);
+
+        NetworkGameState.Instance.ResetTimer(roundDuration);
     }
 
     void SpawnTeam(NetworkArray<int> team, int teamNum)
@@ -145,8 +161,6 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
                 player.RPC_SwitchPlayerRole(Player.PlayerRole.Disabled);
             }
         }
-
-        // TODO: Show Round End Screen
     }
 
     private void OnDestroy()
