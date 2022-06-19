@@ -161,6 +161,15 @@ public class LobbySceneManager : MonoBehaviour, INetworkRunnerCallbacks
         networkRunner.SetActiveScene(arenaSceneName);
     }
 
+    public void ExitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+
+        Application.Quit();
+    }
+
     void OnDestroy()
     {
         networkRunner?.RemoveCallbacks(this);

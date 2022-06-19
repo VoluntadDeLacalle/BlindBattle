@@ -6,6 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Final/MainMenu.unity
+    guid: 28b203ce10e34d2408c8e1e59ec1a594
+  - enabled: 1
+    path: Assets/Scenes/Final/Arena.unity
+    guid: 607649a64fe357d429ee03898e75532d
+  - enabled: 1
+    path: Assets/Scenes/Final/LoadingScene.unity
+    guid: eb1cb2ea9f9a37c40b647811622858c5
+  - enabled: 1
     path: Assets/Scenes/PlayerSpawnTest.unity
     guid: 769985b78e1087941aa3d77fc93c43f7
   - enabled: 1
@@ -15,6 +24,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Test/Azee/ArenaTest.unity
     guid: 4848aeca659131a40b6989b966f4d9d5
   - enabled: 1
-    path: Assets/Scenes/Test/Azee/LoadingScene.unity
+    path: Assets/Scenes/Test/Azee/LoadingSceneTest.unity
     guid: 71a7579d746bd0c4f95c585e8059f753
   m_configObjects: {}

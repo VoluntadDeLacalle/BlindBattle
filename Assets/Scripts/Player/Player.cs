@@ -112,7 +112,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 
     void Update()
     {
-        shootKeyPressed = shootKeyPressed || Input.GetKeyDown(KeyCode.Space);
+        shootKeyPressed = shootKeyPressed || Input.GetButtonDown("Fire1");
     }
 
     public override void FixedUpdateNetwork()
@@ -214,19 +214,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     public void OnInput(NetworkRunner runner, NetworkInput input) 
     {
         var data = new NetworkInputData();
-
-        if (Input.GetKey(KeyCode.W))
-            data.direction += Vector3.forward;
-
-        if (Input.GetKey(KeyCode.S))
-            data.direction += -Vector3.forward;
-
-        if (Input.GetKey(KeyCode.A))
-            data.direction += -Vector3.right;
-
-        if (Input.GetKey(KeyCode.D))
-            data.direction += Vector3.right;
-
+        data.direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         data.mouseInput = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
 
         if (shootKeyPressed)
