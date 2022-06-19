@@ -313,9 +313,9 @@ MonoBehaviour:
     RotTeleportRadians: 1.5
   gravity: -20
   jumpImpulse: 8
-  acceleration: 30
-  braking: 30
-  maxSpeed: 10
+  acceleration: 20
+  braking: 20
+  maxSpeed: 4
   rotationSpeed: 0
   _IsGrounded: 0
   _Velocity: {x: 0, y: 0, z: 0}
@@ -336,6 +336,7 @@ MonoBehaviour:
   avatar: {fileID: 5914533799899650695}
   FPCameraRef: {fileID: 4960689069625951673}
   playerGun: {fileID: 7019054874757496614}
+  networkAnimator: {fileID: 6078148574258624821}
   moveSpeed: 3
   mouseSensitivity: 60
   maxPitchValue: 30
@@ -403,7 +404,7 @@ MonoBehaviour:
     _value: 0
     _inverse: 0
     _hash: -814817977
-  StateHashes: 000000007153f985b3b0dbd6bad385b1c552bcc48a18fce4b9abd9d32afa8626a8b5caa3
+  StateHashes: 000000008a18fce4b9abd9d32afa8626a8b5caa37153f985b3b0dbd6bad385b1c552bcc4
   TriggerHashes: 00000000b35eb119bcdfedb1
 --- !u!1 &8952294751005826423
 GameObject:
