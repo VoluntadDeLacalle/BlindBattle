@@ -59,7 +59,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fee7fc4b77a0d3c4280f862e68b3c4f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 5914533799947135523, guid: cc99af392c9a6644cb802f0d5568202d, type: 3}
+  playerPrefabs:
+    items:
+    - {fileID: 7870810172500110426, guid: c906e972ede11e541b5874f27e13f846, type: 3}
+    - {fileID: 8113834473837153236, guid: e55b6420e3860764693b8ca0d1e96595, type: 3}
+    - {fileID: 5108759851004546154, guid: fcdbb556be64b0049b040bda177edfe6, type: 3}
+    - {fileID: 579985806682909436, guid: 16dc9d5a2fc889c4c862049f2ba7799f, type: 3}
 --- !u!114 &1631916059041316164
 MonoBehaviour:
   m_ObjectHideFlags: 0

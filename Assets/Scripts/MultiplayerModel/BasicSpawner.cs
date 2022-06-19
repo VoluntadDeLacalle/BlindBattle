@@ -10,12 +10,12 @@ using static Player;
 
 public class BasicSpawner : SingletonMonoBehaviour<BasicSpawner>, INetworkRunnerCallbacks
 {
-    public Player playerPrefab;
+    public Randomizer<Player> playerPrefabs;
     public Dictionary<PlayerRef, Player> spawnedCharacters = new Dictionary<PlayerRef, Player>();
 
     public Player SpawnPlayer(NetworkRunner runner, PlayerRef playerRef, PlayerRole role, Transform spawnPoint) 
     {
-        Player player = runner.Spawn(playerPrefab, spawnPoint.position, spawnPoint.rotation, playerRef, (_, obj) => {
+        Player player = runner.Spawn(playerPrefabs.GetRandomItem(), spawnPoint.position, spawnPoint.rotation, playerRef, (_, obj) => {
             obj.GetComponent<Player>().RPC_SwitchPlayerRole(role);
         });
 
@@ -47,6 +47,11 @@ public class BasicSpawner : SingletonMonoBehaviour<BasicSpawner>, INetworkRunner
             runner.Despawn(player.Object);
             spawnedCharacters.Remove(playerRef);
         }
+    }
+
+    private void Start()
+    {
+        playerPrefabs.Shuffle();
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input) { }
