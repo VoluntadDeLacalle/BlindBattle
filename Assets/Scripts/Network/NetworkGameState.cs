@@ -112,7 +112,7 @@ public class NetworkGameState : NetworkBehaviour, INetworkRunnerCallbacks
         }
     }
 
-    int GetPlayerTeamNumber(PlayerRef playerRef)
+    public int GetPlayerTeamNumber(PlayerRef playerRef)
     {
         // TODO: Use a dictionary
 

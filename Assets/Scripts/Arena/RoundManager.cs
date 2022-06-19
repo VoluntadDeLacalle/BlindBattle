@@ -50,27 +50,40 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
         var team1 = NetworkGameState.Instance.team1;
         var team2 = NetworkGameState.Instance.team2;
 
-        SpawnTeam(team1);
-        SpawnTeam(team2);
+        SpawnTeam(team1, 1);
+        SpawnTeam(team2, 2);
     }
 
-    void SpawnTeam(NetworkArray<int> team)
+    void SpawnTeam(NetworkArray<int> team, int teamNum)
     {
         var runner = NetworkManager.Instance.networkRunner;
         int substitutePlayerRef = -1;
+
+        Transform fighterSpawnPoint;
+        Randomizer<Transform> spectatorSpawnPoints;
+        if (teamNum == 1)
+        {
+            fighterSpawnPoint = MapGenerator.Instance.curSkeleton.player1Spawn;
+            spectatorSpawnPoints = MapGenerator.Instance.curSkeleton.team1SpecSpawnRandomizer;
+        }
+        else
+        {
+            fighterSpawnPoint = MapGenerator.Instance.curSkeleton.player2Spawn;
+            spectatorSpawnPoints = MapGenerator.Instance.curSkeleton.team2SpecSpawnRandomizer;
+        }
 
         // Spawning fighter
         int fighterPlayerRef = team.Get(currentRound - 1);
         if (fighterPlayerRef >= 0)
         {
-            BasicSpawner.Instance.SpawnPlayer(runner, fighterPlayerRef, Player.PlayerRole.Fighter);
+            BasicSpawner.Instance.SpawnPlayer(runner, fighterPlayerRef, Player.PlayerRole.Fighter, fighterSpawnPoint);
         }
         else
         {
             substitutePlayerRef = SelectRandomValidPlayerFromTeam(team);
             if (substitutePlayerRef >= 0)
             {
-                BasicSpawner.Instance.SpawnPlayer(runner, substitutePlayerRef, Player.PlayerRole.Fighter);
+                BasicSpawner.Instance.SpawnPlayer(runner, substitutePlayerRef, Player.PlayerRole.Fighter, spectatorSpawnPoints.GetRandomItem());
             }
             else
             {

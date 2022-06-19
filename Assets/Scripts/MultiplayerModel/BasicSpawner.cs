@@ -12,13 +12,9 @@ public class BasicSpawner : SingletonMonoBehaviour<BasicSpawner>, INetworkRunner
     public Player playerPrefab;
     public Dictionary<PlayerRef, Player> spawnedCharacters = new Dictionary<PlayerRef, Player>();
 
-    public Player SpawnPlayer(NetworkRunner runner, PlayerRef playerRef, PlayerRole role) 
+    public Player SpawnPlayer(NetworkRunner runner, PlayerRef playerRef, PlayerRole role, Transform spawnPoint) 
     {
-        // TODO: Use spawn points and role to spawn players in the right spots
-
-        //player.RawEncoded%runner.Config.Simulation.DefaultPlayers This code gets the current player's queue I suppose from the ref. It is then used to multiply the x to give it a unique position.
-        Vector3 spawnPosition = new Vector3((playerRef.RawEncoded%runner.Config.Simulation.DefaultPlayers) * 3, 1, 0);
-        Player player = runner.Spawn(playerPrefab, spawnPosition, Quaternion.identity, playerRef);
+        Player player = runner.Spawn(playerPrefab, spawnPoint.position, spawnPoint.rotation, playerRef);
         player.RPC_SwitchPlayerRole(role);
 
         spawnedCharacters.Add(playerRef, player);

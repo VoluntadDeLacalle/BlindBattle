@@ -162,12 +162,28 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
                         if (player)
                         {
                             player.RPC_SwitchPlayerRole(PlayerRole.Disabled);
-                            // TODO: Wait, and respawn as spectator
+
+                            // TODO: Wait, and then respawn
+                            var teamNum = NetworkGameState.Instance.GetPlayerTeamNumber(Object.InputAuthority);
+                            if (teamNum == 1)
+                            {
+                                transform.position = MapGenerator.Instance.curSkeleton.player1Spawn.position;
+                                transform.rotation = MapGenerator.Instance.curSkeleton.player1Spawn.rotation;
+                            }
+                            else if (teamNum == 2)
+                            {
+                                transform.position = MapGenerator.Instance.curSkeleton.player2Spawn.position;
+                                transform.rotation = MapGenerator.Instance.curSkeleton.player2Spawn.rotation;
+                            }
                         }
                     }
                     else //Hit a static object with a normal collider
                     {
-
+                        var destructible = raycastHit.Collider.GetComponent<Destructible>();
+                        if (destructible)
+                        {
+                            destructible.RPC_Destroy(this);
+                        }
                     }
 
                     playerGun.SpawnGunRicochet(playerNetworkObject, raycastHit.Point);
