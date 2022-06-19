@@ -24,20 +24,43 @@ public class LobbySceneManager : MonoBehaviour, INetworkRunnerCallbacks
     public TMP_Text team2TitleText;
     public TMP_Text team1ListText;
     public TMP_Text team2ListText;
+    public TMP_Text clientMessageText;
+
+    public List<GameObject> HostOnlyItems;
+    public List<GameObject> ClientOnlyItems;
 
     NetworkRunner networkRunner => NetworkManager.Instance.networkRunner;
 
+    private string originalClientMessageText;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        originalClientMessageText = clientMessageText.text;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (NetworkGameState.Instance)
+        {
+            RefreshTeamList(NetworkGameState.Instance.team1, team1ListText);
+            RefreshTeamList(NetworkGameState.Instance.team2, team2ListText);
+        }
+    }
+
+    void RefreshTeamList(NetworkArray<int> team, TMP_Text teamList)
+    {
+        teamList.text = "";
+        for (int i=0; i<team.Length; i++)
+        {
+            var playerId = team.Get(i);
+            if (playerId >= 0 && NetworkUser.allNetworkUsers.ContainsKey(playerId))
+            {
+                teamList.text += NetworkUser.allNetworkUsers[playerId].userName;
+                teamList.text += "\n";
+            }
+        }
     }
 
     public async void CreateRoom()
@@ -102,12 +125,17 @@ public class LobbySceneManager : MonoBehaviour, INetworkRunnerCallbacks
         networkRunner?.AddCallbacks(this);
 
         roomTitleText.text = $"Room: {networkRunner?.SessionInfo.Name ?? "N/A"}";
-        roomScreen.Show();
-
-        if (networkRunner?.GameMode == GameMode.Host)
+        clientMessageText.text = originalClientMessageText;
+        for (int i = 0; i < HostOnlyItems.Count; i++)
         {
-
+            HostOnlyItems[i].SetActive(networkRunner?.GameMode == GameMode.Host);
         }
+        for (int i = 0; i < ClientOnlyItems.Count; i++)
+        {
+            ClientOnlyItems[i].SetActive(networkRunner?.GameMode == GameMode.Client);
+        }
+
+        roomScreen.Show();
     }
 
     public void LeaveRoom()
@@ -115,9 +143,9 @@ public class LobbySceneManager : MonoBehaviour, INetworkRunnerCallbacks
         networkRunner?.Shutdown();
     }
 
-    public void RefreshTeams()
+    public void ResetTeams()
     {
-
+        NetworkGameState.Instance?.ResetTeams();
     }
 
     void OnDestroy()
@@ -147,7 +175,7 @@ public class LobbySceneManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-        //
+        clientMessageText.text = "Disconnected from server";
     }
 
     public void OnConnectedToServer(NetworkRunner runner)

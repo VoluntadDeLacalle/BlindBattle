@@ -18,9 +18,8 @@ public class NetworkManager : SingletonMonoBehaviour<NetworkManager>, INetworkRu
 
     [HideInInspector]
     public string localUserName;
-
-    private Dictionary<PlayerRef, NetworkUser> allNetworkUsers = new Dictionary<PlayerRef, NetworkUser>();
-
+    
+    public bool IsHost => networkRunner?.GameMode == GameMode.Host;
 
     private new void Awake()
     {
@@ -83,8 +82,6 @@ public class NetworkManager : SingletonMonoBehaviour<NetworkManager>, INetworkRu
 
         localUserName = userName;
 
-        allNetworkUsers.Clear();
-
         Debug.Log("Trying to start..");
         return networkRunner.StartGame(new StartGameArgs
         {
@@ -99,7 +96,6 @@ public class NetworkManager : SingletonMonoBehaviour<NetworkManager>, INetworkRu
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
         var networkUser = networkRunner.Spawn(networkUserPrefab, Vector3.zero, Quaternion.identity, player);
-        allNetworkUsers.Add(player, networkUser);
 
         if (player == runner.LocalPlayer && runner.GameMode == GameMode.Host)
         {
@@ -109,7 +105,7 @@ public class NetworkManager : SingletonMonoBehaviour<NetworkManager>, INetworkRu
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        allNetworkUsers.Remove(player);
+        //
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
