@@ -230,7 +230,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1449721347038737993, guid: 313cf8eeddd181e43a867aea35b521f8, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5477151087284821723, guid: 313cf8eeddd181e43a867aea35b521f8, type: 3}
       propertyPath: m_RootOrder
@@ -278,7 +278,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8809624939335940907, guid: 313cf8eeddd181e43a867aea35b521f8, type: 3}
       propertyPath: Flags
-      value: 2561
+      value: 133633
       objectReference: {fileID: 0}
     - target: {fileID: 8809624939335940907, guid: 313cf8eeddd181e43a867aea35b521f8, type: 3}
       propertyPath: NetworkGuid.RawGuidValue.Array.data[0]

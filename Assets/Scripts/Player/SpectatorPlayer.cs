@@ -103,23 +103,6 @@ public class SpectatorPlayer : NetworkBehaviour, INetworkRunnerCallbacks
 
             Vector3 worldDir = transform.TransformDirection(moveDir.normalized);
             charCon.Move(normalMoveSpeed * factor * worldDir * Runner.DeltaTime);
-
-            //var newPos = transform.position;
-
-            //newPos += transform.forward * normalMoveSpeed * factor * data.direction.z * Runner.DeltaTime;
-            //newPos += transform.right * normalMoveSpeed * factor * data.direction.x * Runner.DeltaTime;
-
-            //if ((data.buttons & NetworkInputData.CLIMB) != 0)
-            //{
-            //    newPos += transform.up * climbSpeed * Runner.DeltaTime;
-            //}
-
-            //if ((data.buttons & NetworkInputData.DESCEND) != 0)
-            //{
-            //    newPos -= transform.up * climbSpeed * Runner.DeltaTime;
-            //}
-
-            //rb.MovePosition(newPos);
         }
     }
 
