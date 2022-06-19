@@ -7,16 +7,10 @@ public class Gun : NetworkBehaviour
 {
     [SerializeField] private Transform shootTransform;
     public float shootDistance = 50f;
-    public int maxAmmo = 15;
-    private int currentAmmo = 0;
+    public SimpleTimer shootTimer = new SimpleTimer(4f);
 
     [Header("Prefabs")]
-    [SerializeField] private NetworkPrefabRef gunRicochetPrefab;
-
-    private void Awake()
-    {
-        currentAmmo = maxAmmo;
-    }
+    [SerializeField] private GunRicochet gunRicochetPrefab;
 
     private void OnDrawGizmos()
     {
@@ -29,49 +23,34 @@ public class Gun : NetworkBehaviour
         }
     }
 
-    public int GetCurrentAmmo()
+    public bool CanShoot()
     {
-        return currentAmmo;
+        return shootTimer.expired;
     }
 
-    public void SetCurrentAmmo(int ammoAmount)
+    private void Update()
     {
-        if (ammoAmount <= 0)
+        shootTimer.Update();
+    }
+
+    public bool ShootGun(NetworkObject playerNetworkObject, out LagCompensatedHit raycastHit)
+    {
+        if (shootTimer.expired)
         {
-            currentAmmo = 0;
-        }
-        else if (ammoAmount >= maxAmmo)
-        {
-            currentAmmo = maxAmmo;
+            shootTimer.Reset();
         }
         else
         {
-            currentAmmo = ammoAmount;
+            raycastHit = new LagCompensatedHit { };
+            return false;
         }
-
-    }
-    
-    public bool ShootGun(NetworkObject playerNetworkObject, out LagCompensatedHit raycastHit)
-    {
-        //if (currentAmmo <= 0)
-        //{
-        //    raycastHit = new LagCompensatedHit { };
-        //    return false;
-        //}
-        //else
-        //{
-        //    currentAmmo--;
-        //}
 
         return Runner.LagCompensation.Raycast(shootTransform.position, ((shootTransform.position + shootTransform.forward) - shootTransform.position).normalized, shootDistance, playerNetworkObject.InputAuthority, out raycastHit, -1, HitOptions.IncludePhysX);
     }
 
-    public void SpawnGunRicochet(NetworkObject playerNetworkObject, Vector3 hitPosition)
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.StateAuthority)]
+    public void RPC_SpawnGunRicochet(NetworkObject playerNetworkObject, Vector3 hitPosition)
     {
-        Runner.Spawn(gunRicochetPrefab, hitPosition, Quaternion.identity, playerNetworkObject.InputAuthority,
-          (runner, o) =>
-          {
-              o.GetComponent<GunRicochet>().Init();
-          });
+        NetworkManager.Instance.networkRunner.Spawn(gunRicochetPrefab, hitPosition, Quaternion.identity);
     }
 }

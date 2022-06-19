@@ -53,7 +53,15 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
         if (playerNetworkObject.HasInputAuthority)
         {
             FPCameraRef.GetPlayerCamera().gameObject.SetActive(true);
-            avatar.SetActive(false);
+
+            if (NetworkManager.Instance.IsHost)
+            {
+                FPCameraRef.RemoveHostLayer();
+            }
+            else
+            {
+                avatar.SetActive(false);
+            }
         }
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -130,7 +138,10 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
             ///Firing the gun
             if ((data.buttons & NetworkInputData.SPACEBAR) != 0 && playerNetworkObject.HasInputAuthority && playerRole == PlayerRole.Fighter)
             {
-                networkAnimator.SetTrigger("ShootTrigger");
+                if (playerGun.CanShoot())
+                {
+                    networkAnimator.SetTrigger("ShootTrigger");
+                }
 
                 LagCompensatedHit raycastHit;
                 if (!playerGun.ShootGun(playerNetworkObject, out raycastHit))
@@ -138,7 +149,6 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
                     return;
                 }
                 
-
                 if (raycastHit.Collider != null)
                 {
                     if (raycastHit.Hitbox != null) //Hit a player with a hitbox
@@ -159,7 +169,8 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
                         }
                     }
 
-                    playerGun.SpawnGunRicochet(playerNetworkObject, raycastHit.Point);
+                    Debug.Log("Hit");
+                    playerGun.RPC_SpawnGunRicochet(Object, raycastHit.Point);
                 }
             }
         }
