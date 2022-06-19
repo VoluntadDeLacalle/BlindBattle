@@ -617,7 +617,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2147483647
   defaultBackgroundColor: {r: 0.13333334, g: 0.23137257, b: 0.32941177, a: 0}
-  blindBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  deadBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  blindBackgroundColor: {r: 0.8301887, g: 0, b: 0, a: 1}
 --- !u!81 &1562199206028377911
 AudioListener:
   m_ObjectHideFlags: 0

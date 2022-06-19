@@ -149,6 +149,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
                 {
                     if (raycastHit.Hitbox != null) //Hit a player with a hitbox
                     {
+                        NetworkObject hitPlayerObject = raycastHit.Hitbox.transform.root.gameObject.GetComponent<Player>().playerNetworkObject;
                         //TODO: Call RPC to switch role to disabled
 
                     }
