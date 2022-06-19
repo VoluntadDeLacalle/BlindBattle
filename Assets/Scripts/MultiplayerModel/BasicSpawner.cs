@@ -9,7 +9,7 @@ using static Player;
 
 public class BasicSpawner : SingletonMonoBehaviour<BasicSpawner>, INetworkRunnerCallbacks
 {
-    public Player playerPrefab;
+    public Randomizer<Player> playerPrefabs;
     public Dictionary<PlayerRef, Player> spawnedCharacters = new Dictionary<PlayerRef, Player>();
 
     public Player SpawnPlayer(NetworkRunner runner, PlayerRef playerRef, PlayerRole role) 
@@ -18,7 +18,7 @@ public class BasicSpawner : SingletonMonoBehaviour<BasicSpawner>, INetworkRunner
 
         //player.RawEncoded%runner.Config.Simulation.DefaultPlayers This code gets the current player's queue I suppose from the ref. It is then used to multiply the x to give it a unique position.
         Vector3 spawnPosition = new Vector3((playerRef.RawEncoded%runner.Config.Simulation.DefaultPlayers) * 3, 1, 0);
-        Player player = runner.Spawn(playerPrefab, spawnPosition, Quaternion.identity, playerRef);
+        Player player = runner.Spawn(playerPrefabs.GetRandomItem(), spawnPosition, Quaternion.identity, playerRef);
         player.RPC_SwitchPlayerRole(role);
 
         spawnedCharacters.Add(playerRef, player);
@@ -32,6 +32,11 @@ public class BasicSpawner : SingletonMonoBehaviour<BasicSpawner>, INetworkRunner
             runner.Despawn(player.Object);
             spawnedCharacters.Remove(playerRef);
         }
+    }
+
+    private void Start()
+    {
+        playerPrefabs.Shuffle();
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input) { }
