@@ -142,7 +142,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 
                 if (!hitPositionNormalPair.ContainsKey(raycastHit.Point))
                 {
-                    hitPositionNormalPair.Add(raycastHit.Point, raycastHit.Normal);
+                    //hitPositionNormalPair.Add(raycastHit.Point, raycastHit.Normal);
                 }
 
                 if (raycastHit.Collider != null)
@@ -157,6 +157,8 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
                     {
 
                     }
+
+                    playerGun.SpawnGunRicochet(playerNetworkObject, raycastHit.Point);
                 }
             }
         }

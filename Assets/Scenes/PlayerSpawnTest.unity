@@ -427,6 +427,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fee7fc4b77a0d3c4280f862e68b3c4f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  networkRunner: {fileID: 0}
   playerPrefab:
     RawGuidValue: cc99af392c9a6644cb802f0d5568202d
 --- !u!4 &1360666874
