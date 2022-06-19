@@ -1,4 +1,5 @@
 using Fusion;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : NetworkBehaviour
@@ -15,6 +16,7 @@ public class Player : NetworkBehaviour
     [Header("Player Children Assets")]
     [SerializeField] private GameObject avatar;
     [SerializeField] private PlayerCamera FPCameraRef;
+    [SerializeField] private Gun playerGun;
 
     [Header("Player Movement Variables")]
     [SerializeField] private float moveSpeed = 5;
@@ -27,6 +29,18 @@ public class Player : NetworkBehaviour
 
     private NetworkCharacterControllerPrototype networkCharCon;
     private NetworkObject playerNetworkObject;
+
+    private Dictionary<Vector3, Vector3> hitPositionNormalPair = new Dictionary<Vector3, Vector3>(); 
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.black;
+
+        foreach(KeyValuePair<Vector3, Vector3> entry in hitPositionNormalPair)
+        {
+            Gizmos.DrawLine(entry.Key, (entry.Value - entry.Key));
+        }
+    }
 
     private void Awake()
     {
@@ -80,18 +94,11 @@ public class Player : NetworkBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            SwitchPlayerRole(PlayerRole.Fighter);
-        }
-    }
-
     public override void FixedUpdateNetwork()
     {
         if (GetInput(out NetworkInputData data))
         {
+            ///Movement and Looking
             data.direction.Normalize();
             networkCharCon.Move(moveSpeed * data.direction * Runner.DeltaTime);
 
@@ -106,6 +113,27 @@ public class Player : NetworkBehaviour
                 xRotation = Mathf.Clamp(xRotation, minPitchValue, maxPitchValue);
 
                 FPCameraRef.GetPlayerCamera().gameObject.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
+            }
+
+            ///Firing the gun
+            if ((data.buttons & NetworkInputData.SPACEBAR) != 0)
+            {
+                Debug.Log("FIRED!");
+                LagCompensatedHit raycastHit;
+                if (!playerGun.ShootGun(playerNetworkObject, out raycastHit))
+                {
+                    Debug.Log(false);
+                    return;
+                }
+
+                if (!hitPositionNormalPair.ContainsKey(raycastHit.Point))
+                {
+                    hitPositionNormalPair.Add(raycastHit.Point, raycastHit.Normal);
+                }
+                
+                
+                Debug.Log(raycastHit.Collider);///Collider will be null if hit a hit box so have an if statement for this.
+                Debug.Log(raycastHit.Hitbox);
             }
         }
     }

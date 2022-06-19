@@ -12,6 +12,8 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private NetworkPrefabRef playerPrefab;
     private Dictionary<PlayerRef, NetworkObject> spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
 
+    private bool spacebar;
+
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) 
     {
         //player.RawEncoded%runner.Config.Simulation.DefaultPlayers This code gets the current player's queue I suppose from the ref. It is then used to multiply the x to give it a unique position.
@@ -28,6 +30,11 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
             networkRunner.Despawn(networkObject);
             spawnedCharacters.Remove(player);
         }
+    }
+
+    void Update()
+    {
+        spacebar = spacebar || Input.GetKeyDown(KeyCode.Space);
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input) 
@@ -47,6 +54,12 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
             data.direction += spawnedCharacters[runner.LocalPlayer].gameObject.transform.right;
 
         data.mouseInput = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+
+        if (spacebar)
+        {
+            data.buttons |= NetworkInputData.SPACEBAR;
+        }
+        spacebar = false;
 
         input.Set(data);
     }
