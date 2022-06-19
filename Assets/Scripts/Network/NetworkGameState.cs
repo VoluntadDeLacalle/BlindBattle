@@ -14,6 +14,11 @@ public class NetworkGameState : NetworkBehaviour, INetworkRunnerCallbacks
     [Networked, Capacity(GameManager.MaxPlayersPerTeam)]
     public NetworkArray<int> team2 { get; } = MakeInitializer(new int[] { -1, -1, -1, -1, -1 });
 
+    [Networked]
+    public int totalRounds { get; set; }
+    [Networked]
+    public int currentRound { get; set; }
+
     private void Awake()
     {
         if (NetworkManager.Instance.IsHost)
@@ -41,6 +46,11 @@ public class NetworkGameState : NetworkBehaviour, INetworkRunnerCallbacks
     void Update()
     {
 
+    }
+
+    public override void Spawned()
+    {
+        currentRound = 1;
     }
 
     public void ResetTeams()
@@ -133,6 +143,32 @@ public class NetworkGameState : NetworkBehaviour, INetworkRunnerCallbacks
                 return;
             }
         }
+    }
+
+    public void ComputeTotalRounds()
+    {
+        totalRounds = GetBiggerTeamSize();
+    }
+
+    public int GetBiggerTeamSize()
+    {
+        var team1Size = GetTeamSize(team1);
+        var team2Size = GetTeamSize(team2);
+        return Math.Max(team1Size, team2Size);
+    }
+
+    public int GetTeamSize(NetworkArray<int> team)
+    {
+        int validUsers = 0;
+        for (int i = 0; i < team.Length; i++)
+        {
+            if (team.Get(i) >= 0)
+            {
+                validUsers++;
+            }
+        }
+
+        return validUsers;
     }
 
     private void OnDestroy()
