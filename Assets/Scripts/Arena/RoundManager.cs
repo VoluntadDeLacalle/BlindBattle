@@ -118,7 +118,7 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
                 // Also skipping any substitute fighter
                 if (playerRef >= 0 && playerRef != substitutePlayerRef)
                 {
-                    BasicSpawner.Instance.SpawnPlayer(runner, playerRef, Player.PlayerRole.Spectator, spectatorSpawnPoints.GetRandomItem());
+                    BasicSpawner.Instance.SpawnSpectatorPlayer(runner, playerRef, spectatorSpawnPoints.GetRandomItem());
                 }
             }
         }
@@ -155,10 +155,16 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
 
         foreach (var kvp in BasicSpawner.Instance.spawnedCharacters)
         {
-            var player = kvp.Value;
-            if (player.playerRole == Player.PlayerRole.Fighter)
+            Player player = kvp.Value.GetComponent<Player>();
+            SpectatorPlayer spectatorPlayer = kvp.Value.GetComponent<SpectatorPlayer>();
+
+            if (player)
             {
                 player.RPC_SwitchPlayerRole(Player.PlayerRole.Disabled);
+            }
+            if (spectatorPlayer)
+            {
+                spectatorPlayer.RPC_SwitchCanMove(false);
             }
         }
     }

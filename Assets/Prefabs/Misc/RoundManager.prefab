@@ -66,6 +66,7 @@ MonoBehaviour:
     - {fileID: 8113834473837153236, guid: e55b6420e3860764693b8ca0d1e96595, type: 3}
     - {fileID: 5108759851004546154, guid: fcdbb556be64b0049b040bda177edfe6, type: 3}
     - {fileID: 579985806682909436, guid: 16dc9d5a2fc889c4c862049f2ba7799f, type: 3}
+  spectatorPlayerPrefab: {fileID: 7815213413093125783, guid: 313cf8eeddd181e43a867aea35b521f8, type: 3}
 --- !u!114 &1631916059041316164
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -83,6 +84,8 @@ MonoBehaviour:
   currentMode: 
   btn_Host: 0
   btn_Join: 0
+  singleTeam: 0
+  btn_ResetTeams: 0
   btn_StartGame: 0
 --- !u!114 &9128878922461048339
 MonoBehaviour:

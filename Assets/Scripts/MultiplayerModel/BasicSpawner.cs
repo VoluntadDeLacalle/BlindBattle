@@ -11,7 +11,8 @@ using static Player;
 public class BasicSpawner : SingletonMonoBehaviour<BasicSpawner>, INetworkRunnerCallbacks
 {
     public Randomizer<Player> playerPrefabs;
-    public Dictionary<PlayerRef, Player> spawnedCharacters = new Dictionary<PlayerRef, Player>();
+    public SpectatorPlayer spectatorPlayerPrefab;
+    public Dictionary<PlayerRef, NetworkObject> spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
 
     public Player SpawnPlayer(NetworkRunner runner, PlayerRef playerRef, PlayerRole role, Transform spawnPoint) 
     {
@@ -19,7 +20,7 @@ public class BasicSpawner : SingletonMonoBehaviour<BasicSpawner>, INetworkRunner
             obj.GetComponent<Player>().RPC_SwitchPlayerRole(role);
         });
 
-        spawnedCharacters[playerRef] = player;
+        spawnedCharacters[playerRef] = player.Object;
         return player;
     }
 
@@ -40,11 +41,19 @@ public class BasicSpawner : SingletonMonoBehaviour<BasicSpawner>, INetworkRunner
         }
     }
 
+    public SpectatorPlayer SpawnSpectatorPlayer(NetworkRunner runner, PlayerRef playerRef, Transform spawnPoint)
+    {
+        SpectatorPlayer spectatorPlayer = runner.Spawn(spectatorPlayerPrefab, spawnPoint.position, spawnPoint.rotation, playerRef);
+
+        spawnedCharacters[playerRef] = spectatorPlayer.Object;
+        return spectatorPlayer;
+    }
+
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef playerRef)
     {
-        if(spawnedCharacters.TryGetValue(playerRef, out Player player))
+        if(spawnedCharacters.TryGetValue(playerRef, out NetworkObject obj))
         {
-            runner.Despawn(player.Object);
+            runner.Despawn(obj);
             spawnedCharacters.Remove(playerRef);
         }
     }

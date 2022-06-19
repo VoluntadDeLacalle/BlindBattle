@@ -81,7 +81,7 @@ public class NetworkGameState : NetworkBehaviour, INetworkRunnerCallbacks
         }
     }
 
-    public void ResetTeams()
+    public void ResetTeams(bool singleTeam = false)
     {
         if (!NetworkManager.Instance.IsHost)
         {
@@ -97,7 +97,7 @@ public class NetworkGameState : NetworkBehaviour, INetworkRunnerCallbacks
 
         for (int i = 0; i < userRandomizer.items.Count; i++)
         {
-            AddPlayerToRandomTeam(userRandomizer.GetRandomItem().belongsTo);
+            AddPlayerToRandomTeam(userRandomizer.GetRandomItem().belongsTo, singleTeam);
         }
     }
 
@@ -143,7 +143,7 @@ public class NetworkGameState : NetworkBehaviour, INetworkRunnerCallbacks
         return -1;
     }
 
-    void AddPlayerToRandomTeam(PlayerRef playerRef)
+    void AddPlayerToRandomTeam(PlayerRef playerRef, bool singleTeam = false)
     {
         Debug.Log(playerRef);
 
@@ -164,11 +164,14 @@ public class NetworkGameState : NetworkBehaviour, INetworkRunnerCallbacks
                 return;
             }
 
-            if (team2.Get(i) < 0)
+            if (!singleTeam)
             {
-                Debug.Log("Assigning to team 2");
-                team2.Set(i, playerRef);
-                return;
+                if (team2.Get(i) < 0)
+                {
+                    Debug.Log("Assigning to team 2");
+                    team2.Set(i, playerRef);
+                    return;
+                }
             }
         }
     }
@@ -211,7 +214,7 @@ public class NetworkGameState : NetworkBehaviour, INetworkRunnerCallbacks
 
         return validUsers;
     }
-    
+
     private void OnDestroy()
     {
         NetworkManager.Instance.networkRunner?.RemoveCallbacks(this);

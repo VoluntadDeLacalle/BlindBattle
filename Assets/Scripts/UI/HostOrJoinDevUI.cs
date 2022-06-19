@@ -20,9 +20,13 @@ public class HostOrJoinDevUI : MonoBehaviour
     [Button("Join", "Join")]
     public bool btn_Join;
 
+    public bool singleTeam = false;
+
+    [Button("Reset Teams [Host Only]", "ResetTeams")]
+    public bool btn_ResetTeams;
+
     [Button("Start Game [Host Only]", "StartGame")]
     public bool btn_StartGame;
-
 
     // Start is called before the first frame update
     void Start()
@@ -51,6 +55,11 @@ public class HostOrJoinDevUI : MonoBehaviour
     {
         await NetworkManager.Instance.JoinRoom(roomName, yourName);
         PostRunnerCreation();
+    }
+
+    public void ResetTeams()
+    {
+        NetworkGameState.Instance.ResetTeams(singleTeam);
     }
 
     void PostRunnerCreation()
