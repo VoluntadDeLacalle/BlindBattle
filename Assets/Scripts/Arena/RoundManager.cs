@@ -1,10 +1,11 @@
 using Fusion;
+using Fusion.Sockets;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoundManager : SingletonMonoBehaviour<RoundManager>
+public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunnerCallbacks
 {
     public int currentRound => NetworkGameState.Instance.currentRound;
 
@@ -16,16 +17,18 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>
     // Start is called before the first frame update
     void Start()
     {
-        if (NetworkManager.Instance.networkRunner)
-        {
-            StartRound();
-        }
+        RegisterRunnerCallbacks();
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    public void RegisterRunnerCallbacks()
+    {
+        NetworkManager.Instance.networkRunner?.AddCallbacks(this);
     }
 
     public void StartRound()
@@ -124,10 +127,98 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>
             var player = kvp.Value;
             if (player.playerRole == Player.PlayerRole.Fighter)
             {
-                player.SwitchPlayerRole(Player.PlayerRole.Disabled);
+                player.RPC_SwitchPlayerRole(Player.PlayerRole.Disabled);
             }
         }
 
         // TODO: Show Round End Screen
+    }
+
+    private void OnDestroy()
+    {
+        NetworkManager.Instance.networkRunner?.RemoveCallbacks(this);
+    }
+
+    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
+    {
+        //
+    }
+
+    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
+    {
+        //
+    }
+
+    public void OnInput(NetworkRunner runner, NetworkInput input)
+    {
+        //
+    }
+
+    public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
+    {
+        //
+    }
+
+    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
+    {
+        // TODO: Show error screen
+    }
+
+    public void OnConnectedToServer(NetworkRunner runner)
+    {
+        //
+    }
+
+    public void OnDisconnectedFromServer(NetworkRunner runner)
+    {
+        //
+    }
+
+    public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
+    {
+        //
+    }
+
+    public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
+    {
+        //
+    }
+
+    public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
+    {
+        //
+    }
+
+    public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
+    {
+        //
+    }
+
+    public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data)
+    {
+        //
+    }
+
+    public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
+    {
+        //
+    }
+
+    public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data)
+    {
+        //
+    }
+
+    public void OnSceneLoadDone(NetworkRunner runner)
+    {
+        if (NetworkManager.Instance.networkRunner)
+        {
+            StartRound();
+        }
+    }
+
+    public void OnSceneLoadStart(NetworkRunner runner)
+    {
+        //
     }
 }

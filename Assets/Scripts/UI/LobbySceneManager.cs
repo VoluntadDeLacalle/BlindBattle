@@ -9,6 +9,8 @@ using UnityEngine.UI;
 
 public class LobbySceneManager : MonoBehaviour, INetworkRunnerCallbacks
 {
+    public string arenaSceneName = "ArenaScene";
+
     public TMP_InputField createUserNameField;
     public TMP_InputField createRoomNameField;
     public Button createButton;
@@ -146,6 +148,16 @@ public class LobbySceneManager : MonoBehaviour, INetworkRunnerCallbacks
     public void ResetTeams()
     {
         NetworkGameState.Instance?.ResetTeams();
+    }
+
+    public void StartGame()
+    {
+        if (networkRunner.GameMode != GameMode.Host)
+        {
+            return;
+        }
+
+        networkRunner.SetActiveScene(arenaSceneName);
     }
 
     void OnDestroy()

@@ -19,7 +19,7 @@ public class BasicSpawner : SingletonMonoBehaviour<BasicSpawner>, INetworkRunner
         //player.RawEncoded%runner.Config.Simulation.DefaultPlayers This code gets the current player's queue I suppose from the ref. It is then used to multiply the x to give it a unique position.
         Vector3 spawnPosition = new Vector3((playerRef.RawEncoded%runner.Config.Simulation.DefaultPlayers) * 3, 1, 0);
         Player player = runner.Spawn(playerPrefab, spawnPosition, Quaternion.identity, playerRef);
-        player.SwitchPlayerRole(role);
+        player.RPC_SwitchPlayerRole(role);
 
         spawnedCharacters.Add(playerRef, player);
         return player;
