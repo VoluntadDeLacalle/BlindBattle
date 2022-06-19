@@ -674,6 +674,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 995d9f95711db654ea6094fa744009a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  arenaSceneName: ArenaTest
   createUserNameField: {fileID: 1927968448}
   createRoomNameField: {fileID: 1189156662}
   createButton: {fileID: 411511020}
@@ -1880,7 +1881,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1817728454437610965, guid: e93cd62927eaab44babf8d991d18b457, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1817728454437610965, guid: e93cd62927eaab44babf8d991d18b457, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -1896,7 +1897,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1817728454437610965, guid: e93cd62927eaab44babf8d991d18b457, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: JoinRoom
+      value: StartGame
       objectReference: {fileID: 0}
     - target: {fileID: 1817728454437610965, guid: e93cd62927eaab44babf8d991d18b457, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName

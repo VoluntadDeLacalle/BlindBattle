@@ -173,7 +173,7 @@ public class NetworkGameState : NetworkBehaviour, INetworkRunnerCallbacks
 
     private void OnDestroy()
     {
-        NetworkManager.Instance.networkRunner.RemoveCallbacks(this);
+        NetworkManager.Instance.networkRunner?.RemoveCallbacks(this);
     }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)

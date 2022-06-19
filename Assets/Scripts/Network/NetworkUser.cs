@@ -9,7 +9,7 @@ public class NetworkUser : NetworkBehaviour
 
     [Networked] public string userName { get; set; }
 
-    public PlayerRef belongsTo => Object.InputAuthority;
+    public PlayerRef belongsTo => Object?.InputAuthority ?? -1;
 
     private void Awake()
     {
@@ -26,13 +26,16 @@ public class NetworkUser : NetworkBehaviour
             RPC_SetUserName(NetworkManager.Instance.localUserName);
         }
 
-        allNetworkUsers[belongsTo] = this;
+        if (belongsTo >= 0)
+        {
+            allNetworkUsers[belongsTo] = this;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.StateAuthority)]

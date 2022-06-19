@@ -44,11 +44,18 @@ public class HostOrJoinDevUI : MonoBehaviour
     public async void Host()
     {
         await NetworkManager.Instance.CreateRoom(roomName, yourName);
+        PostRunnerCreation();
     }
 
     public async void Join()
     {
         await NetworkManager.Instance.JoinRoom(roomName, yourName);
+        PostRunnerCreation();
+    }
+
+    void PostRunnerCreation()
+    {
+        RoundManager.Instance.RegisterRunnerCallbacks();
     }
 
     public void StartGame()

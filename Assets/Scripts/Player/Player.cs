@@ -30,7 +30,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 
     private float xRotation = 0f;
     private Vector2 mouseInput = Vector2.zero;
-    private bool spacebar = false;
+    private bool shootKeyPressed = false;
 
     private NetworkCharacterControllerPrototype networkCharCon;
     private NetworkObject playerNetworkObject;
@@ -69,7 +69,8 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    public void SwitchPlayerRole(PlayerRole newPlayerRole)
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.StateAuthority)]
+    public void RPC_SwitchPlayerRole(PlayerRole newPlayerRole)
     {
         if (newPlayerRole == playerRole)
         {
@@ -109,7 +110,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 
     void Update()
     {
-        spacebar = spacebar || Input.GetKeyDown(KeyCode.Space);
+        shootKeyPressed = shootKeyPressed || Input.GetKeyDown(KeyCode.Space);
     }
 
     public override void FixedUpdateNetwork()
@@ -125,7 +126,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 
             transform.Rotate(Vector3.up * mouseX);
 
-            if (playerRole != PlayerRole.Fighter) ///CHANGE THIS TO BE ONLY SPECTATOR ONCE WE HAVE DISABLED FUNCTIONALITY IN.
+            if (playerRole == PlayerRole.Spectator)
             {
                 xRotation -= mouseY;
                 xRotation = Mathf.Clamp(xRotation, minPitchValue, maxPitchValue);
@@ -149,9 +150,12 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
                 {
                     if (raycastHit.Hitbox != null) //Hit a player with a hitbox
                     {
-                        NetworkObject hitPlayerObject = raycastHit.Hitbox.transform.root.gameObject.GetComponent<Player>().playerNetworkObject;
-                        //TODO: Call RPC to switch role to disabled
-
+                        Player player = raycastHit.Hitbox.transform.root.gameObject.GetComponent<Player>();
+                        if (player)
+                        {
+                            player.RPC_SwitchPlayerRole(PlayerRole.Disabled);
+                            // TODO: Wait, and respawn as spectator
+                        }
                     }
                     else //Hit a static object with a normal collider
                     {
@@ -194,11 +198,11 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 
         data.mouseInput = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
 
-        if (spacebar)
+        if (shootKeyPressed)
         {
             data.buttons |= NetworkInputData.SPACEBAR;
         }
-        spacebar = false;
+        shootKeyPressed = false;
 
         input.Set(data);
     }
