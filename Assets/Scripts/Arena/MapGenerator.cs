@@ -48,6 +48,6 @@ public class MapGenerator : SingletonMonoBehaviour<MapGenerator>
 
     void PlaceDestructible(Destructible destructiblePrefab, Transform spawnPoint)
     {
-        NetworkManager.Instance.networkRunner.Spawn(destructiblePrefab, spawnPoint.position, transform.rotation);
+        NetworkManager.Instance.networkRunner.Spawn(destructiblePrefab, spawnPoint.position, spawnPoint.rotation);
     }
 }

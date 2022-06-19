@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5510545926103976159}
   - component: {fileID: 8354683518891762226}
   - component: {fileID: 8068010758486819625}
+  - component: {fileID: -4269588092238192907}
   m_Layer: 0
   m_Name: GunRicochet
   m_TagString: Untagged
@@ -58,6 +59,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 8068010758486819625}
+  - {fileID: -4269588092238192907}
   SimulationBehaviours: []
 --- !u!114 &8068010758486819625
 MonoBehaviour:
@@ -72,8 +74,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  gunRicochetNetworkObject: {fileID: 0}
   particleTimer: 5
+--- !u!114 &-4269588092238192907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5510545926103976156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 3
+  InterpolationSpace: 0
+  InterpolationTarget: {fileID: 0}
+  InterpolateErrorCorrection: 1
+  InterpolatedErrorCorrectionSettings:
+    MinRate: 3.3
+    MaxRate: 10
+    PosBlendStart: 0.25
+    PosBlendEnd: 1
+    PosMinCorrection: 0.025
+    PosTeleportDistance: 2
+    RotBlendStart: 0.1
+    RotBlendEnd: 0.5
+    RotTeleportRadians: 1.5
 --- !u!1001 &5510545925839706435
 PrefabInstance:
   m_ObjectHideFlags: 0
