@@ -45,6 +45,8 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
             NetworkGameState.Instance.ComputeTotalRounds();
         }
 
+        MapGenerator.Instance.Generate();
+
         var team1 = NetworkGameState.Instance.team1;
         var team2 = NetworkGameState.Instance.team2;
 

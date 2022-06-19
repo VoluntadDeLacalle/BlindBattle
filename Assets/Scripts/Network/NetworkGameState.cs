@@ -19,6 +19,11 @@ public class NetworkGameState : NetworkBehaviour, INetworkRunnerCallbacks
     [Networked]
     public int currentRound { get; set; }
 
+    [Networked]
+    public int team1Score { get; set; }
+    [Networked]
+    public int team2Score { get; set; }
+
     private void Awake()
     {
         if (NetworkManager.Instance.IsHost)
@@ -51,6 +56,21 @@ public class NetworkGameState : NetworkBehaviour, INetworkRunnerCallbacks
     public override void Spawned()
     {
         currentRound = 1;
+        team1Score = 0;
+        team2Score = 0;
+    }
+
+    public void AddScoreToPlayer(int value, PlayerRef playerRef)
+    {
+        var teamNum = GetPlayerTeamNumber(playerRef);
+        if (teamNum == 1)
+        {
+            team1Score += value;
+        }
+        if (teamNum == 2)
+        {
+            team2Score += value;
+        }
     }
 
     public void ResetTeams()

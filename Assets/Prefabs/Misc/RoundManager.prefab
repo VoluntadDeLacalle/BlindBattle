@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5959941507894663468}
   - component: {fileID: 1219898605951950399}
   - component: {fileID: 1631916059041316164}
+  - component: {fileID: 9128878922461048339}
   m_Layer: 0
   m_Name: RoundManager
   m_TagString: Untagged
@@ -77,3 +78,22 @@ MonoBehaviour:
   btn_Host: 0
   btn_Join: 0
   btn_StartGame: 0
+--- !u!114 &9128878922461048339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5959941507894663471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69cf821c3c211cb469bd1000709c1574, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  availableMapPrefabs:
+    items:
+    - {fileID: 5915416755122764094, guid: b4df088d1c11356489fcc32e660d0f98, type: 3}
+  destructiblePrefabs:
+    items:
+    - {fileID: 9129101967722385764, guid: 31dd4f39f5b19e64683bec0b6e10e329, type: 3}
+  curSkeleton: {fileID: 0}
