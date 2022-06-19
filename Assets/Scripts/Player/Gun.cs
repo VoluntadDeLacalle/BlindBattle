@@ -15,7 +15,7 @@ public class Gun : NetworkBehaviour
         if (shootTransform != null)
         {
             Gizmos.DrawSphere(shootTransform.position, 0.08f);
-            Gizmos.DrawRay(shootTransform.position, ((shootTransform.position + shootTransform.forward) - shootTransform.position).normalized * 0.5f);
+            Gizmos.DrawRay(shootTransform.position, ((shootTransform.position + shootTransform.forward) - shootTransform.position).normalized * shootDistance);
         }
     }
     

@@ -6,13 +6,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
+public class BasicSpawner : SingletonMonoBehaviour<BasicSpawner>, INetworkRunnerCallbacks
 {
-    private NetworkRunner networkRunner;
+    public NetworkRunner networkRunner;
     [SerializeField] private NetworkPrefabRef playerPrefab;
     private Dictionary<PlayerRef, NetworkObject> spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
-
-    private bool spacebar;
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) 
     {
@@ -32,37 +30,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
 
-    void Update()
-    {
-        spacebar = spacebar || Input.GetKeyDown(KeyCode.Space);
-    }
-
-    public void OnInput(NetworkRunner runner, NetworkInput input) 
-    {
-        var data = new NetworkInputData();
-
-        if (Input.GetKey(KeyCode.W))
-            data.direction += spawnedCharacters[runner.LocalPlayer].gameObject.transform.forward;
-
-        if (Input.GetKey(KeyCode.S))
-            data.direction += -spawnedCharacters[runner.LocalPlayer].gameObject.transform.forward;
-
-        if (Input.GetKey(KeyCode.A))
-            data.direction += -spawnedCharacters[runner.LocalPlayer].gameObject.transform.right;
-
-        if (Input.GetKey(KeyCode.D))
-            data.direction += spawnedCharacters[runner.LocalPlayer].gameObject.transform.right;
-
-        data.mouseInput = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-
-        if (spacebar)
-        {
-            data.buttons |= NetworkInputData.SPACEBAR;
-        }
-        spacebar = false;
-
-        input.Set(data);
-    }
+    public void OnInput(NetworkRunner runner, NetworkInput input) { }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
     public void OnConnectedToServer(NetworkRunner runner) { }
