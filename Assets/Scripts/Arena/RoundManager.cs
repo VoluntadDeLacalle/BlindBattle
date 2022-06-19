@@ -83,7 +83,7 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
             substitutePlayerRef = SelectRandomValidPlayerFromTeam(team);
             if (substitutePlayerRef >= 0)
             {
-                BasicSpawner.Instance.SpawnPlayer(runner, substitutePlayerRef, Player.PlayerRole.Fighter, spectatorSpawnPoints.GetRandomItem());
+                BasicSpawner.Instance.SpawnPlayer(runner, substitutePlayerRef, Player.PlayerRole.Fighter, fighterSpawnPoint);
             }
             else
             {
@@ -102,7 +102,7 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
                 // Also skipping any substitute fighter
                 if (playerRef >= 0 && playerRef != substitutePlayerRef)
                 {
-                    BasicSpawner.Instance.SpawnPlayer(runner, playerRef, Player.PlayerRole.Spectator);
+                    BasicSpawner.Instance.SpawnPlayer(runner, playerRef, Player.PlayerRole.Spectator, spectatorSpawnPoints.GetRandomItem());
                 }
             }
         }

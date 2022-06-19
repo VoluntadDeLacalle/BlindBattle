@@ -53,15 +53,15 @@ public class Gun : NetworkBehaviour
     
     public bool ShootGun(NetworkObject playerNetworkObject, out LagCompensatedHit raycastHit)
     {
-        if (currentAmmo <= 0)
-        {
-            raycastHit = new LagCompensatedHit { };
-            return false;
-        }
-        else
-        {
-            currentAmmo--;
-        }
+        //if (currentAmmo <= 0)
+        //{
+        //    raycastHit = new LagCompensatedHit { };
+        //    return false;
+        //}
+        //else
+        //{
+        //    currentAmmo--;
+        //}
 
         return Runner.LagCompensation.Raycast(shootTransform.position, ((shootTransform.position + shootTransform.forward) - shootTransform.position).normalized, shootDistance, playerNetworkObject.InputAuthority, out raycastHit, -1, HitOptions.IncludePhysX);
     }

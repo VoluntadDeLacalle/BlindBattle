@@ -2,6 +2,7 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class Player : NetworkBehaviour, INetworkRunnerCallbacks
@@ -145,25 +146,13 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
                         Player player = raycastHit.Hitbox.transform.root.gameObject.GetComponent<Player>();
                         if (player)
                         {
-                            player.RPC_SwitchPlayerRole(PlayerRole.Disabled);
-
                             // TODO: Wait, and then respawn
-                            var teamNum = NetworkGameState.Instance.GetPlayerTeamNumber(Object.InputAuthority);
-                            if (teamNum == 1)
-                            {
-                                transform.position = MapGenerator.Instance.curSkeleton.player1Spawn.position;
-                                transform.rotation = MapGenerator.Instance.curSkeleton.player1Spawn.rotation;
-                            }
-                            else if (teamNum == 2)
-                            {
-                                transform.position = MapGenerator.Instance.curSkeleton.player2Spawn.position;
-                                transform.rotation = MapGenerator.Instance.curSkeleton.player2Spawn.rotation;
-                            }
+                            player.RPC_Respawn();
                         }
                     }
                     else //Hit a static object with a normal collider
                     {
-                        var destructible = raycastHit.Collider.GetComponent<Destructible>();
+                        var destructible = raycastHit.Collider.GetComponentInParent<Destructible>();
                         if (destructible)
                         {
                             destructible.RPC_Destroy(this);
@@ -174,6 +163,18 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
                 }
             }
         }
+    }
+
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.StateAuthority)]
+    void RPC_Respawn()
+    {
+        var playerRef = Object.InputAuthority;
+        var curPlayerRole = playerRole;
+
+        RPC_SwitchPlayerRole(PlayerRole.Disabled);
+        Runner.Despawn(Object);
+
+        BasicSpawner.Instance.SpawnAfterDelay(playerRef, curPlayerRole, 1);
     }
 
     private void LateUpdate()

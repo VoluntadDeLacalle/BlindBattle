@@ -3,6 +3,7 @@ using Fusion.Sockets;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static Player;
@@ -14,11 +15,29 @@ public class BasicSpawner : SingletonMonoBehaviour<BasicSpawner>, INetworkRunner
 
     public Player SpawnPlayer(NetworkRunner runner, PlayerRef playerRef, PlayerRole role, Transform spawnPoint) 
     {
-        Player player = runner.Spawn(playerPrefab, spawnPoint.position, spawnPoint.rotation, playerRef);
-        player.RPC_SwitchPlayerRole(role);
+        Player player = runner.Spawn(playerPrefab, spawnPoint.position, spawnPoint.rotation, playerRef, (_, obj) => {
+            obj.GetComponent<Player>().RPC_SwitchPlayerRole(role);
+        });
 
-        spawnedCharacters.Add(playerRef, player);
+        spawnedCharacters[playerRef] = player;
         return player;
+    }
+
+
+    public async void SpawnAfterDelay(PlayerRef playerRef, PlayerRole curPlayerRole, float delay)
+    {
+        await Task.Delay(TimeSpan.FromSeconds(delay));
+
+        Debug.Log("Respawning!");
+        var teamNum = NetworkGameState.Instance.GetPlayerTeamNumber(playerRef);
+        if (teamNum == 1)
+        {
+            SpawnPlayer(NetworkManager.Instance.networkRunner, playerRef, curPlayerRole, MapGenerator.Instance.curSkeleton.player1Spawn);
+        }
+        else if (teamNum == 2)
+        {
+            SpawnPlayer(NetworkManager.Instance.networkRunner, playerRef, curPlayerRole, MapGenerator.Instance.curSkeleton.player2Spawn);
+        }
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef playerRef)

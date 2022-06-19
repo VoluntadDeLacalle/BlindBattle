@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5866826549030892995}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -108,7 +108,6 @@ GameObject:
   - component: {fileID: 9129101967722385770}
   - component: {fileID: 9129101967722385771}
   - component: {fileID: 9129101967722385764}
-  - component: {fileID: 4090710798591171625}
   m_Layer: 0
   m_Name: DestructibleBase
   m_TagString: Untagged
@@ -171,19 +170,6 @@ MonoBehaviour:
   _interpolationDataSource: 0
   value: 100
   isDestroyedInHost: 0
---- !u!65 &4090710798591171625
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9129101967722385765}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &9129101967829850358
 GameObject:
   m_ObjectHideFlags: 0
