@@ -1,8 +1,10 @@
 using Fusion;
+using Fusion.Sockets;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : NetworkBehaviour
+public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 {
     public enum PlayerRole
     {
@@ -24,8 +26,11 @@ public class Player : NetworkBehaviour
     [SerializeField] private float maxPitchValue = 30;
     [SerializeField] private float minPitchValue = -20;
 
+    private bool canMove = false;
+
     private float xRotation = 0f;
     private Vector2 mouseInput = Vector2.zero;
+    private bool spacebar = false;
 
     private NetworkCharacterControllerPrototype networkCharCon;
     private NetworkObject playerNetworkObject;
@@ -48,6 +53,11 @@ public class Player : NetworkBehaviour
         playerNetworkObject = GetComponent<NetworkObject>();
     }
 
+    public override void Spawned()
+    {
+        BasicSpawner.Instance.networkRunner.AddCallbacks(this);
+    }
+
     private void Start()
     {
         if (playerNetworkObject.HasInputAuthority)
@@ -56,7 +66,6 @@ public class Player : NetworkBehaviour
             avatar.SetActive(false);
         }
 
-        ///REMOVE THIS LATER
         Cursor.lockState = CursorLockMode.Locked;
     }
 
@@ -78,9 +87,11 @@ public class Player : NetworkBehaviour
         switch (newPlayerRole)
         {
             case PlayerRole.Disabled:
+                changed.Behaviour.canMove = false;
 
                 break;
             case PlayerRole.Fighter:
+                changed.Behaviour.canMove = true;
                 changed.Behaviour.FPCameraRef.GetPlayerCamera().gameObject.transform.localRotation = Quaternion.Euler(Vector3.zero);
                 changed.Behaviour.xRotation = 0;
 
@@ -88,15 +99,22 @@ public class Player : NetworkBehaviour
 
                 break;
             case PlayerRole.Spectator:
+                changed.Behaviour.canMove = true;
+
                 changed.Behaviour.FPCameraRef.ToggleCameraBlindness(false);
 
                 break;
         }
     }
 
+    void Update()
+    {
+        spacebar = spacebar || Input.GetKeyDown(KeyCode.Space);
+    }
+
     public override void FixedUpdateNetwork()
     {
-        if (GetInput(out NetworkInputData data))
+        if (GetInput(out NetworkInputData data) && canMove)
         {
             ///Movement and Looking
             data.direction.Normalize();
@@ -111,18 +129,14 @@ public class Player : NetworkBehaviour
             {
                 xRotation -= mouseY;
                 xRotation = Mathf.Clamp(xRotation, minPitchValue, maxPitchValue);
-
-                FPCameraRef.GetPlayerCamera().gameObject.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
             }
 
             ///Firing the gun
-            if ((data.buttons & NetworkInputData.SPACEBAR) != 0)
+            if ((data.buttons & NetworkInputData.SPACEBAR) != 0 && playerNetworkObject.HasInputAuthority && playerRole == PlayerRole.Fighter)
             {
-                Debug.Log("FIRED!");
                 LagCompensatedHit raycastHit;
                 if (!playerGun.ShootGun(playerNetworkObject, out raycastHit))
                 {
-                    Debug.Log(false);
                     return;
                 }
 
@@ -130,11 +144,73 @@ public class Player : NetworkBehaviour
                 {
                     hitPositionNormalPair.Add(raycastHit.Point, raycastHit.Normal);
                 }
-                
-                
-                Debug.Log(raycastHit.Collider);///Collider will be null if hit a hit box so have an if statement for this.
-                Debug.Log(raycastHit.Hitbox);
+
+                if (raycastHit.Collider != null)
+                {
+                    if (raycastHit.Hitbox != null) //Hit a player with a hitbox
+                    {
+                        NetworkObject hitPlayerObject = raycastHit.Hitbox.transform.root.gameObject.GetComponent<Player>().playerNetworkObject;
+                        //TODO: Call RPC to switch role to disabled
+
+                    }
+                    else //Hit a static object with a normal collider
+                    {
+
+                    }
+                }
             }
         }
     }
+
+    private void LateUpdate()
+    {
+        FPCameraRef.GetPlayerCamera().gameObject.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
+    }
+
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+        runner.RemoveCallbacks(this);   
+    }
+
+    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
+    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
+    public void OnInput(NetworkRunner runner, NetworkInput input) 
+    {
+        var data = new NetworkInputData();
+
+        if (Input.GetKey(KeyCode.W))
+            data.direction += transform.forward;
+
+        if (Input.GetKey(KeyCode.S))
+            data.direction += -transform.forward;
+
+        if (Input.GetKey(KeyCode.A))
+            data.direction += -transform.right;
+
+        if (Input.GetKey(KeyCode.D))
+            data.direction += transform.right;
+
+        data.mouseInput = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+
+        if (spacebar)
+        {
+            data.buttons |= NetworkInputData.SPACEBAR;
+        }
+        spacebar = false;
+
+        input.Set(data);
+    }
+    public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
+    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
+    public void OnConnectedToServer(NetworkRunner runner) { }
+    public void OnDisconnectedFromServer(NetworkRunner runner) { }
+    public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
+    public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
+    public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
+    public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
+    public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
+    public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
+    public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) { }
+    public void OnSceneLoadDone(NetworkRunner runner) { }
+    public void OnSceneLoadStart(NetworkRunner runner) { }
 }

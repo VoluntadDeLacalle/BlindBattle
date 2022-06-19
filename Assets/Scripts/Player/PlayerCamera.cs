@@ -8,6 +8,7 @@ public class PlayerCamera : MonoBehaviour
     public LayerMask nothingLayerMask;
     public LayerMask everythingLayerMask;
     public Color defaultBackgroundColor;
+    public Color deadBackgroundColor;
     public Color blindBackgroundColor;
 
     private void OnDrawGizmos()
@@ -19,6 +20,11 @@ public class PlayerCamera : MonoBehaviour
     public Camera GetPlayerCamera()
     {
         return playerCamera;
+    }
+
+    public void ActivateDeadBackgroundColor()
+    {
+        playerCamera.backgroundColor = deadBackgroundColor;
     }
 
     public void ToggleCameraBlindness(bool shouldBlind)
