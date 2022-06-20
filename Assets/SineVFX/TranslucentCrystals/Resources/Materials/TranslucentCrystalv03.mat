@@ -120,7 +120,7 @@ Material:
     - _TransNormalDistortion: 0.2
     - _TransScattering: 7.5
     - _TransShadow: 0.9
-    - _Translucency: 12.5
+    - _Translucency: 0
     - _TranslucencyMaskPower: 1
     - _UVSec: 0
     - _ZWrite: 1

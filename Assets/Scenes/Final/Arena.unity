@@ -597,7 +597,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2134619836545132715, guid: e69f30d8e39f2594ca041a6419f7c6fc, type: 3}
       propertyPath: roomName
-      value: LocalDevRoom_Arena
+      value: LocalDevRoom_Arena_test
       objectReference: {fileID: 0}
     - target: {fileID: 3400889823917415631, guid: e69f30d8e39f2594ca041a6419f7c6fc, type: 3}
       propertyPath: m_SizeDelta.x

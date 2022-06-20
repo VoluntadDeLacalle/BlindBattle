@@ -97,7 +97,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   availableMapPrefabs:
     items:
-    - {fileID: 5915416755122764094, guid: b4df088d1c11356489fcc32e660d0f98, type: 3}
+    - {fileID: 5915416755122764094, guid: c47cee73a2a725d4e9ab6dc9082b618b, type: 3}
   destructiblePrefabs:
     items:
     - {fileID: 4702756184683511973, guid: 742e7cea2ce1b5a4b939ea92e6238641, type: 3}
