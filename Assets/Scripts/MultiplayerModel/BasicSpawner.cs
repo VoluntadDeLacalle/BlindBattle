@@ -10,13 +10,16 @@ using static Player;
 
 public class BasicSpawner : SingletonMonoBehaviour<BasicSpawner>, INetworkRunnerCallbacks
 {
-    public Randomizer<Player> playerPrefabs;
+    public Player redPlayerPrefab;
+    public Player bluePlayerPrefab;
     public SpectatorPlayer spectatorPlayerPrefab;
     public Dictionary<PlayerRef, NetworkObject> spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
 
     public Player SpawnPlayer(NetworkRunner runner, PlayerRef playerRef, PlayerRole role, Transform spawnPoint) 
     {
-        Player player = runner.Spawn(playerPrefabs.GetRandomItem(), spawnPoint.position, spawnPoint.rotation, playerRef, (_, obj) => {
+        Player playerToSpawn = NetworkGameState.Instance.GetPlayerTeamNumber(playerRef) == 1 ? redPlayerPrefab : bluePlayerPrefab;
+
+        Player player = runner.Spawn(playerToSpawn, spawnPoint.position, spawnPoint.rotation, playerRef, (_, obj) => {
             obj.GetComponent<Player>().RPC_SwitchPlayerRole(role);
         });
 
@@ -56,11 +59,6 @@ public class BasicSpawner : SingletonMonoBehaviour<BasicSpawner>, INetworkRunner
             runner.Despawn(obj);
             spawnedCharacters.Remove(playerRef);
         }
-    }
-
-    private void Start()
-    {
-        playerPrefabs.Shuffle();
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input) { }
