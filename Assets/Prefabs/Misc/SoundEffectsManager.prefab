@@ -45,8 +45,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34ff281f4db4c374e9d772ff0449be88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioSource: {fileID: 7556966773746702237}
-  soundEffects: []
+  audioSource2D: {fileID: 7556966773746702237}
+  SFX3DPrefab: {fileID: 8689601738196859819, guid: f73de5bdd26e9b14f998ca062f5eff49, type: 3}
+  soundEffects:
+  - {fileID: 8300000, guid: ceec2606507ad1f4abb30da03ceea75c, type: 3}
+  - {fileID: 8300000, guid: fa373ef2960a49048ad64c069ae89651, type: 3}
+  - {fileID: 8300000, guid: 4c97ce02666ae23418f8b444a9dcce9f, type: 3}
+  - {fileID: 8300000, guid: 2e5802ad3aa15f54b894fc57bb65c125, type: 3}
+  - {fileID: 8300000, guid: aaf8c728fa43f1e418d90659bd2d55af, type: 3}
+  - {fileID: 8300000, guid: e3c12c10f60e84647a7f66a98eb54acc, type: 3}
+  - {fileID: 8300000, guid: 92c203637753d684d91f54eb6dee7ba3, type: 3}
+  - {fileID: 8300000, guid: 931a4273d6647684b85303aa1c875a91, type: 3}
+  - {fileID: 8300000, guid: a21ff261aa1432e49a6b7d03f8705f93, type: 3}
+  - {fileID: 8300000, guid: 675db7164d381644a8d8ff7e083f5005, type: 3}
 --- !u!82 &7556966773746702237
 AudioSource:
   m_ObjectHideFlags: 0

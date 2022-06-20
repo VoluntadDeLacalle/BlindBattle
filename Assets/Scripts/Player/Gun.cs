@@ -8,6 +8,8 @@ public class Gun : NetworkBehaviour
     [SerializeField] private Transform shootTransform;
     public float shootDistance = 50f;
     public SimpleTimer shootTimer = new SimpleTimer(4f);
+    public string gunFireSFXName;
+    public string gunEmptySFXName;
 
     [Header("Prefabs")]
     [SerializeField] private GunRicochet gunRicochetPrefab;
@@ -31,6 +33,7 @@ public class Gun : NetworkBehaviour
     private void Update()
     {
         shootTimer.Update();
+        //Debug.Log($"{gameObject.name} can shoot: {CanShoot()}");
     }
 
     public bool ShootGun(NetworkObject playerNetworkObject, out LagCompensatedHit raycastHit)
@@ -51,6 +54,9 @@ public class Gun : NetworkBehaviour
     [Rpc(sources: RpcSources.All, targets: RpcTargets.StateAuthority)]
     public void RPC_SpawnGunRicochet(NetworkObject playerNetworkObject, Vector3 hitPosition)
     {
-        NetworkManager.Instance.networkRunner.Spawn(gunRicochetPrefab, hitPosition, Quaternion.identity);
+        NetworkManager.Instance.networkRunner.Spawn(gunRicochetPrefab, hitPosition, Quaternion.identity, null, (Runner, o) =>
+        {
+            o.GetComponent<GunRicochet>().Init();
+        });
     }
 }

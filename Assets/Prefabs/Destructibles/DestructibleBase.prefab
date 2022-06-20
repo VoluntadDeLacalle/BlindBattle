@@ -250,6 +250,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   value: 100
+  destructibleSFXName: DestructibleShatter
   isDestroyedInHost: 0
   indicatorOnScreen: {fileID: 8985509042876573345}
   indicatorOffScreen: {fileID: 4385796884519875189}

@@ -18,6 +18,7 @@ public class HUD : SingletonMonoBehaviour<HUD>
 
     public string mainMenuName;
     public string loadingSceneName;
+    public string endRoundSFXName;
 
     public GameObject pauseScreen;
     public GameObject endScreen;
@@ -138,6 +139,8 @@ public class HUD : SingletonMonoBehaviour<HUD>
 
         HelperUtilities.UpdateCursorLock(false);
         endScreen.SetActive(true);
+
+        NetworkGameState.Instance.RPC_PlayAudio(endRoundSFXName);
     }
 
     public void NextRound()

@@ -215,6 +215,30 @@ public class NetworkGameState : NetworkBehaviour, INetworkRunnerCallbacks
         return validUsers;
     }
 
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
+    public void RPC_PlayAt(string audioClipName, Vector3 position, float maxDistance = 30)
+    {
+        AudioClip audioClip = SoundEffectsManager.Instance.GetClip(audioClipName);
+        if (audioClip == null)
+        {
+            return;
+        }
+
+        SoundEffectsManager.Instance.PlayAt(audioClip, position, maxDistance);    
+    }
+
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
+    public void RPC_PlayAudio(string audioClipName)
+    {
+        AudioClip audioClip = SoundEffectsManager.Instance.GetClip(audioClipName);
+        if (audioClip == null)
+        {
+            return;
+        }
+        
+        SoundEffectsManager.Instance.Play(audioClip);
+    }
+
     private void OnDestroy()
     {
         NetworkManager.Instance.networkRunner?.RemoveCallbacks(this);
