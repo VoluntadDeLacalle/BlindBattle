@@ -85,6 +85,8 @@ public class SpectatorPlayer : NetworkBehaviour, INetworkRunnerCallbacks
             HUD.Instance.SetCameraForIndicator(camera);
             camera.gameObject.SetActive(true);
             avatar.SetActive(false);
+
+            RoundManager.Instance.ToggleDirectionalLightsShadows(true);
         }
         else
         {

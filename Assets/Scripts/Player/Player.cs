@@ -77,6 +77,8 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
             HUD.Instance.SetCameraForIndicator(camera);
             // We don't show indicators if the current player is in the pit
             HUD.Instance.ToggleIndicators(false);
+
+            RoundManager.Instance.ToggleDirectionalLightsShadows(false);
         }
         else
         {
