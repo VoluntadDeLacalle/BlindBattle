@@ -35,16 +35,18 @@ public class PlayerCamera : MonoBehaviour
 
     public void ToggleCameraBlindness(bool shouldBlind)
     {
+        // This is now controlled using the RenderSettings at the player level  
+
         if (NetworkManager.Instance.IsHost)
         {
-            playerCamera.cullingMask = shouldBlind ? nothingLayerMask : hostLayerMask;
+            playerCamera.cullingMask = hostLayerMask;
         }
         else
         {
-            playerCamera.cullingMask = shouldBlind ? nothingLayerMask : everythingLayerMask;
+            playerCamera.cullingMask = everythingLayerMask;
         }
 
-        playerCamera.clearFlags = shouldBlind ? CameraClearFlags.SolidColor : CameraClearFlags.Skybox;
-        playerCamera.backgroundColor = shouldBlind ? blindBackgroundColor : defaultBackgroundColor;
+        //playerCamera.clearFlags = shouldBlind ? CameraClearFlags.SolidColor : CameraClearFlags.Skybox;
+        //playerCamera.backgroundColor = shouldBlind ? blindBackgroundColor : defaultBackgroundColor;
     }
 }

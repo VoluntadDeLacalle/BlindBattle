@@ -70,18 +70,23 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     {
         NetworkManager.Instance.networkRunner.AddCallbacks(this);
 
-        if (Runner.LocalPlayer != Object.InputAuthority)
+        var camera = FPCameraRef.GetPlayerCamera();
+        if (Runner.LocalPlayer == Object.InputAuthority)
         {
-            SetupIndicators();
-        }
-        else
-        {
+            RenderSettings.fog = true;
+
             indicatorOnScreen.visible = false;
             indicatorOffScreen.visible = false;
 
-            HUD.Instance.SetCameraForIndicator(FPCameraRef.GetPlayerCamera());
+            camera.gameObject.SetActive(true);
+            HUD.Instance.SetCameraForIndicator(camera);
             // We don't show indicators if the current player is in the pit
             HUD.Instance.ToggleIndicators(false);
+        }
+        else
+        {
+            camera.gameObject.SetActive(false);
+            SetupIndicators();
         }
     }
 

@@ -14,12 +14,12 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 0
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  m_FogMode: 3
-  m_FogDensity: 0.01
-  m_LinearFogStart: 0
-  m_LinearFogEnd: 300
+  m_Fog: 1
+  m_FogColor: {r: 0.1268676, g: 0.092515126, b: 0.1981132, a: 1}
+  m_FogMode: 1
+  m_FogDensity: 0.19
+  m_LinearFogStart: -2
+  m_LinearFogEnd: 6.8
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
@@ -276,6 +276,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8184182569919652951, guid: 313cf8eeddd181e43a867aea35b521f8, type: 3}
+      propertyPath: m_ShowToolkit
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8184182569919652951, guid: 313cf8eeddd181e43a867aea35b521f8, type: 3}
+      propertyPath: m_ShowCustomSorter
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8809624939335940907, guid: 313cf8eeddd181e43a867aea35b521f8, type: 3}
       propertyPath: Flags
       value: 133633
@@ -331,7 +339,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5914533799947135527, guid: cc99af392c9a6644cb802f0d5568202d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 6.44
       objectReference: {fileID: 0}
     - target: {fileID: 5914533799947135527, guid: cc99af392c9a6644cb802f0d5568202d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -339,7 +347,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5914533799947135527, guid: cc99af392c9a6644cb802f0d5568202d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 19.51
       objectReference: {fileID: 0}
     - target: {fileID: 5914533799947135527, guid: cc99af392c9a6644cb802f0d5568202d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -377,6 +385,10 @@ PrefabInstance:
       propertyPath: renderers.Array.data[0]
       value: 
       objectReference: {fileID: 6453655333016373702}
+    - target: {fileID: 8952294751005826423, guid: cc99af392c9a6644cb802f0d5568202d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cc99af392c9a6644cb802f0d5568202d, type: 3}
 --- !u!1001 &5915416755930263017

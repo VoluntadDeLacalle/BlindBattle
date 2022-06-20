@@ -20,6 +20,7 @@ public class SpectatorPlayer : NetworkBehaviour, INetworkRunnerCallbacks
     private float rotationX = 0.0f;
     private float rotationY = 0.0f;
 
+    [SerializeField] private new GameObject avatar;
     [SerializeField] private new Camera camera;
     [SerializeField] private IndicatorOnScreen indicatorOnScreen;
     [SerializeField] private IndicatorOffScreen indicatorOffScreen;
@@ -75,16 +76,20 @@ public class SpectatorPlayer : NetworkBehaviour, INetworkRunnerCallbacks
         NetworkManager.Instance.networkRunner.AddCallbacks(this);
         RPC_SwitchCanMove(true);
 
-        if (Runner.LocalPlayer != Object.InputAuthority)
-        {
-            camera.gameObject.SetActive(false);
-            SetupIndicators();
-        }
-        else
+        if (Runner.LocalPlayer == Object.InputAuthority)
         {
             indicatorOnScreen.visible = false;
             indicatorOffScreen.visible = false;
+            RenderSettings.fog = false;
             HUD.Instance.SetCameraForIndicator(camera);
+            camera.gameObject.SetActive(true);
+            avatar.SetActive(false);
+        }
+        else
+        {
+            camera.gameObject.SetActive(false);
+            avatar.SetActive(true);
+            SetupIndicators();
         }
     }
     public override void Despawned(NetworkRunner runner, bool hasState)
