@@ -67,6 +67,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "3a95a222-6857-42d6-88b9-37e95d66b495",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -152,7 +161,7 @@
                     "id": "20d2a6e7-9132-4237-954d-454c4ee37ac1",
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "ScaleVector2(x=18,y=18)",
                     "groups": "PS4;Xbox",
                     "action": "Look",
                     "isComposite": false,
@@ -173,6 +182,28 @@
                     "name": "",
                     "id": "081edd8e-98bd-47f0-b919-e7a09cdfadb6",
                     "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PS4;Xbox",
+                    "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ed9e7ed5-9f09-417b-8e9e-95aa4e417c4a",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5eb9f6f5-9f57-446b-bafb-5b3b7dd9810e",
+                    "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "PS4;Xbox",
@@ -265,6 +296,28 @@
                     "processors": "",
                     "groups": "PS4;Xbox",
                     "action": "DroneDescend",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4615e75f-7301-4e9d-a058-eadf25b03e09",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2a371505-bbaa-4098-96a8-060c80cbe08c",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PS4;Xbox",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

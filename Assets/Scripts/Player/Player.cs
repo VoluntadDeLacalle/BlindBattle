@@ -204,7 +204,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
             }
         }
 
-        if(Object.HasInputAuthority && Input.GetButtonDown("Fire1"))
+        if(Object.HasInputAuthority && RoundManager.Instance.playerInput.actions["Fire"].triggered)
         {
             bool gunFireStatus = playerGun.CanShoot();
             if (!gunFireStatus)

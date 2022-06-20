@@ -465,7 +465,7 @@ MonoBehaviour:
   indicatorOnScreen: {fileID: 5416416375361071988}
   indicatorOffScreen: {fileID: 7129843032548412594}
   moveSpeed: 3
-  mouseSensitivity: 75
+  mouseSensitivity: 7
   maxPitchValue: 30
   minPitchValue: -20
   footstepMagnitudeThreshold: 0.2

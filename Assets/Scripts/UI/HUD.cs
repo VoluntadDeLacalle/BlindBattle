@@ -73,7 +73,7 @@ public class HUD : SingletonMonoBehaviour<HUD>
             }
         }
 
-        if (Input.GetButtonDown("Pause"))
+        if (RoundManager.Instance.playerInput.actions["Pause"].triggered)
         {
             TogglePause();
         }

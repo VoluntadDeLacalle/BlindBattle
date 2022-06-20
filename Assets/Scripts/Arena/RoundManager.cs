@@ -13,7 +13,8 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
 
     public int currentRound => NetworkGameState.Instance.currentRound;
 
-    private PlayerInput playerInput;
+    [HideInInspector]
+    public PlayerInput playerInput;
     private bool shootKeyPressed = false;
 
     private new void Awake()
@@ -211,7 +212,6 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
     {
         var data = new NetworkInputData();
         var inputDirection = playerInput.actions["Move"].ReadValue<Vector2>();
-        Debug.Log(inputDirection);
         data.direction = new Vector3(inputDirection.x, 0, inputDirection.y);
         data.mouseInput = playerInput.actions["Look"].ReadValue<Vector2>();
 
@@ -221,22 +221,22 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
         }
         shootKeyPressed = false;
 
-        if (playerInput.actions["DroneFast"].triggered)
+        if (playerInput.actions["DroneFast"].IsPressed())
         {
             data.buttons |= NetworkInputData.FAST;
         }
 
-        if (playerInput.actions["DroneSlow"].triggered)
+        if (playerInput.actions["DroneSlow"].IsPressed())
         {
             data.buttons |= NetworkInputData.SLOW;
         }
 
-        if (playerInput.actions["DroneAscend"].triggered)
+        if (playerInput.actions["DroneAscend"].IsPressed())
         {
             data.buttons |= NetworkInputData.CLIMB;
         }
 
-        if (playerInput.actions["DroneDescend"].triggered)
+        if (playerInput.actions["DroneDescend"].IsPressed())
         {
             data.buttons |= NetworkInputData.DESCEND;
         }
