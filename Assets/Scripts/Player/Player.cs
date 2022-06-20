@@ -237,7 +237,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
                 if (gunFireStatus)
                 {
                     RPC_AnimationTrigger("ShootTrigger");
-                    NetworkGameState.Instance.RPC_PlayAt(playerGun.gunFireSFXName, transform.position, 100);
+                    NetworkGameState.Instance.RPC_PlayAt(playerGun.gunFireSFXName, transform.position, 300);
                 }
 
                 LagCompensatedHit raycastHit;
