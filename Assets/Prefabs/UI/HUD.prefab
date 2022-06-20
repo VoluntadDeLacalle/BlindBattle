@@ -1620,6 +1620,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   team1ScoreText: {fileID: 7613208713088088528}
   team2ScoreText: {fileID: 5608374356662169184}
+  team1PlayerIndicator: {fileID: 4061594489219639626}
+  team2PlayerIndicator: {fileID: 2030789818469515002}
   roundNameText: {fileID: 7139316582735278881}
   timerText: {fileID: 7139316582608690327}
   mainMenuName: MainMenu
@@ -2391,6 +2393,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee50e6fc2bcfe8f4c9a46f97baaab8e9, type: 3}
+--- !u!1 &4061594489219639626 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9168521867617219289, guid: ee50e6fc2bcfe8f4c9a46f97baaab8e9, type: 3}
+  m_PrefabInstance: {fileID: 5143265414304193427}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &7139316582157031531 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2626581820889744376, guid: ee50e6fc2bcfe8f4c9a46f97baaab8e9, type: 3}
@@ -2560,6 +2567,22 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.20790316
       objectReference: {fileID: 0}
+    - target: {fileID: 949233200320964132, guid: ee50e6fc2bcfe8f4c9a46f97baaab8e9, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 949233200320964132, guid: ee50e6fc2bcfe8f4c9a46f97baaab8e9, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 949233200320964132, guid: ee50e6fc2bcfe8f4c9a46f97baaab8e9, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 949233200320964132, guid: ee50e6fc2bcfe8f4c9a46f97baaab8e9, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2626581819637466672, guid: ee50e6fc2bcfe8f4c9a46f97baaab8e9, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2702,6 +2725,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee50e6fc2bcfe8f4c9a46f97baaab8e9, type: 3}
+--- !u!1 &2030789818469515002 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9168521867617219289, guid: ee50e6fc2bcfe8f4c9a46f97baaab8e9, type: 3}
+  m_PrefabInstance: {fileID: 7139316583018744867}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &5143265413450338267 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2626581820889744376, guid: ee50e6fc2bcfe8f4c9a46f97baaab8e9, type: 3}

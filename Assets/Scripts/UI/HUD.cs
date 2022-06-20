@@ -12,6 +12,8 @@ public class HUD : SingletonMonoBehaviour<HUD>
 {
     public TMP_Text team1ScoreText;
     public TMP_Text team2ScoreText;
+    public GameObject team1PlayerIndicator;
+    public GameObject team2PlayerIndicator;
 
     public TMP_Text roundNameText;
     public TMP_Text timerText;
@@ -50,6 +52,10 @@ public class HUD : SingletonMonoBehaviour<HUD>
             var remainingTime = NetworkGameState.Instance.gameTimer.RemainingTime(NetworkManager.Instance.networkRunner) ?? 0;
             timerText.text = $"{HelperUtilities.GetTimeDisplay(remainingTime)}";
 
+
+            var teamNum = NetworkGameState.Instance.GetPlayerTeamNumber(NetworkManager.Instance.networkRunner.LocalPlayer);
+            team1PlayerIndicator.SetActive(teamNum == 1);
+            team2PlayerIndicator.SetActive(teamNum == 2);
 
             if (NetworkGameState.Instance.gameTimer.Expired(NetworkManager.Instance.networkRunner))
             {
