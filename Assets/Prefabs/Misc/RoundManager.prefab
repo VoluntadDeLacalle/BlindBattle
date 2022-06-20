@@ -62,10 +62,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefabs:
     items:
-    - {fileID: 7870810172500110426, guid: c906e972ede11e541b5874f27e13f846, type: 3}
-    - {fileID: 8113834473837153236, guid: e55b6420e3860764693b8ca0d1e96595, type: 3}
-    - {fileID: 5108759851004546154, guid: fcdbb556be64b0049b040bda177edfe6, type: 3}
-    - {fileID: 579985806682909436, guid: 16dc9d5a2fc889c4c862049f2ba7799f, type: 3}
+    - {fileID: 1086642087223198982, guid: 62cf919bd354aa74c9028a211620a7f7, type: 3}
+    - {fileID: 5803454682053409548, guid: 8bcd96c85f0f09c4885399c094ab8445, type: 3}
+    - {fileID: 7329366897089533922, guid: 305b1033914b1f74ca997a354ba7f005, type: 3}
   spectatorPlayerPrefab: {fileID: 7815213413093125783, guid: 313cf8eeddd181e43a867aea35b521f8, type: 3}
 --- !u!114 &1631916059041316164
 MonoBehaviour:
