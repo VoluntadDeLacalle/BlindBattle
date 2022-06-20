@@ -14,16 +14,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Final/LoadingScene.unity
     guid: eb1cb2ea9f9a37c40b647811622858c5
-  - enabled: 1
-    path: Assets/Scenes/PlayerSpawnTest.unity
-    guid: 769985b78e1087941aa3d77fc93c43f7
-  - enabled: 1
-    path: Assets/Scenes/Test/Azee/GameSessionTest.unity
-    guid: d415e9af8d1b14141aec6ce3e5553eb7
-  - enabled: 1
-    path: Assets/Scenes/Test/Azee/ArenaTest.unity
-    guid: 4848aeca659131a40b6989b966f4d9d5
-  - enabled: 1
-    path: Assets/Scenes/Test/Azee/LoadingSceneTest.unity
-    guid: 71a7579d746bd0c4f95c585e8059f753
   m_configObjects: {}
