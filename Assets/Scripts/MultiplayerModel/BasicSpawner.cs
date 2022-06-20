@@ -20,7 +20,9 @@ public class BasicSpawner : SingletonMonoBehaviour<BasicSpawner>, INetworkRunner
         Player playerToSpawn = NetworkGameState.Instance.GetPlayerTeamNumber(playerRef) == 1 ? redPlayerPrefab : bluePlayerPrefab;
 
         Player player = runner.Spawn(playerToSpawn, spawnPoint.position, spawnPoint.rotation, playerRef, (_, obj) => {
-            obj.GetComponent<Player>().RPC_SwitchPlayerRole(role);
+            var newPlayer = obj.GetComponent<Player>();
+            newPlayer.TeleportTo(spawnPoint);
+            newPlayer.RPC_SwitchPlayerRole(role);
         });
 
         spawnedCharacters[playerRef] = player.Object;

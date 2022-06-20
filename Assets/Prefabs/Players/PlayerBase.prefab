@@ -492,8 +492,6 @@ MonoBehaviour:
     width: 16
     height: 16
   footstepAudioSource: {fileID: 2665895179238604853}
-  thudSFXName: Thud
-  victoryDingSFXName: VictoryDing
 --- !u!114 &7019054874757496614
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -511,8 +509,8 @@ MonoBehaviour:
   shootDistance: 50
   shootTimer:
     durationRange:
-      min: 4
-      max: 4
+      min: 2
+      max: 2
     _elapsedTime: 0
   gunFireSFXName: GunShot
   gunEmptySFXName: EmptyGun

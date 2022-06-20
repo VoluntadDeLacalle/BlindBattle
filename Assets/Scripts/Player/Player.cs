@@ -43,6 +43,8 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 
     [Header("Player SFX Names & Varibles")]
     [SerializeField] private AudioSource footstepAudioSource;
+    
+    private Transform spawnPoint = null;
 
     private bool canMove = false;
 
@@ -64,6 +66,11 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     public override void Spawned()
     {
         NetworkManager.Instance.networkRunner.AddCallbacks(this);
+
+        if (spawnPoint != null)
+        {
+            networkCharCon.TeleportToPositionRotation(spawnPoint.position, spawnPoint.rotation);
+        }
 
         var camera = FPCameraRef.GetPlayerCamera();
         if (Runner.LocalPlayer == Object.InputAuthority)
@@ -206,6 +213,12 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     public void RPC_AnimationTrigger(string triggerName)
     {
         networkAnimator.SetTrigger(triggerName);
+    }
+
+    public void TeleportTo(Transform spawnPoint)
+    {
+        networkCharCon.TeleportToPositionRotation(spawnPoint.position, spawnPoint.rotation);
+        this.spawnPoint = spawnPoint;
     }
 
     public override void FixedUpdateNetwork()
