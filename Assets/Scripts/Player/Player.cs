@@ -77,8 +77,8 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
         {
             RenderSettings.fog = true;
 
-            indicatorOnScreen.visible = false;
-            indicatorOffScreen.visible = false;
+            indicatorOnScreen.enabled = false;
+            indicatorOffScreen.enabled = false;
 
             camera.gameObject.SetActive(true);
             HUD.Instance.SetCameraForIndicator(camera);

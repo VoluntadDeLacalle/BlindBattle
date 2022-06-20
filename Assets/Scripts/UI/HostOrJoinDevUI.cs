@@ -22,6 +22,7 @@ public class HostOrJoinDevUI : MonoBehaviour
     public bool btn_Join;
 
     public bool singleTeam = false;
+    public bool spectatorOnly = false;
 
     [Button("Reset Teams [Host Only]", "ResetTeams")]
     public bool btn_ResetTeams;
@@ -72,7 +73,7 @@ public class HostOrJoinDevUI : MonoBehaviour
     {
         if (NetworkManager.Instance.IsHost)
         {
-            RoundManager.Instance.StartRound();
+            RoundManager.Instance.StartRound(spectatorOnly);
         }
         else
         {

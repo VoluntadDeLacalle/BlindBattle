@@ -38,11 +38,16 @@ public class SpectatorPlayer : NetworkBehaviour, INetworkRunnerCallbacks
 
     private CharacterController charCon;
     private Rigidbody rb;
+    private NetworkTransform netTransform;
+
+    [HideInInspector]
+    public Transform spawnPoint = null;
 
     private void Awake()
     {
         charCon = GetComponent<CharacterController>();
         rb = GetComponent<Rigidbody>();
+        netTransform = GetComponent<NetworkTransform>();
 
         droneHoverAudioSource.Play();
     }
@@ -75,12 +80,19 @@ public class SpectatorPlayer : NetworkBehaviour, INetworkRunnerCallbacks
     public override void Spawned()
     {
         NetworkManager.Instance.networkRunner.AddCallbacks(this);
+
+        if (spawnPoint != null)
+        {
+            netTransform.TeleportToPositionRotation(spawnPoint.position, spawnPoint.rotation);
+        }
+        charCon.enabled = true;
+
         RPC_SwitchCanMove(true);
 
         if (Runner.LocalPlayer == Object.InputAuthority)
         {
-            indicatorOnScreen.visible = false;
-            indicatorOffScreen.visible = false;
+            indicatorOnScreen.enabled = false;
+            indicatorOffScreen.enabled = false;
             RenderSettings.fog = false;
             HUD.Instance.SetCameraForIndicator(camera);
             camera.gameObject.SetActive(true);

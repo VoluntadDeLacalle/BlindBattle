@@ -48,7 +48,11 @@ public class BasicSpawner : SingletonMonoBehaviour<BasicSpawner>, INetworkRunner
 
     public SpectatorPlayer SpawnSpectatorPlayer(NetworkRunner runner, PlayerRef playerRef, Transform spawnPoint)
     {
-        SpectatorPlayer spectatorPlayer = runner.Spawn(spectatorPlayerPrefab, spawnPoint.position, spawnPoint.rotation, playerRef);
+        SpectatorPlayer spectatorPlayer = runner.Spawn(spectatorPlayerPrefab, spawnPoint.position, spawnPoint.rotation, playerRef, (_, obj) =>
+        {
+            var newPlayer = obj.GetComponent<SpectatorPlayer>();
+            newPlayer.spawnPoint = spawnPoint;
+        });
 
         spawnedCharacters[playerRef] = spectatorPlayer.Object;
         return spectatorPlayer;

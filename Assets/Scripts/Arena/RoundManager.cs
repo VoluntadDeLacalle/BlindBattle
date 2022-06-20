@@ -3,6 +3,7 @@ using Fusion.Sockets;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunnerCallbacks
@@ -49,7 +50,7 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
         NetworkManager.Instance.networkRunner?.AddCallbacks(this);
     }
 
-    public void StartRound()
+    public void StartRound(bool spectatorOnly = false)
     {
         if (!NetworkManager.Instance.IsHost)
         {
@@ -65,16 +66,18 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
 
         MapGenerator.Instance.Generate();
 
+        //await Task.Delay(TimeSpan.FromSeconds(3));
+
         var team1 = NetworkGameState.Instance.team1;
         var team2 = NetworkGameState.Instance.team2;
 
-        SpawnTeam(team1, 1);
-        SpawnTeam(team2, 2);
+        SpawnTeam(team1, 1, spectatorOnly);
+        SpawnTeam(team2, 2, spectatorOnly);
 
         NetworkGameState.Instance.ResetTimer(roundDuration);
     }
 
-    void SpawnTeam(NetworkArray<int> team, int teamNum)
+    void SpawnTeam(NetworkArray<int> team, int teamNum, bool spectatorOnly = false)
     {
         var runner = NetworkManager.Instance.networkRunner;
         int substitutePlayerRef = -1;
@@ -92,22 +95,25 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
             spectatorSpawnPoints = MapGenerator.Instance.curSkeleton.team2SpecSpawnRandomizer;
         }
 
-        // Spawning fighter
-        int fighterPlayerRef = team.Get(currentRound - 1);
-        if (fighterPlayerRef >= 0)
+        if (!spectatorOnly)
         {
-            BasicSpawner.Instance.SpawnPlayer(runner, fighterPlayerRef, Player.PlayerRole.Fighter, fighterSpawnPoint);
-        }
-        else
-        {
-            substitutePlayerRef = SelectRandomValidPlayerFromTeam(team);
-            if (substitutePlayerRef >= 0)
+            // Spawning fighter
+            int fighterPlayerRef = team.Get(currentRound - 1);
+            if (fighterPlayerRef >= 0)
             {
-                BasicSpawner.Instance.SpawnPlayer(runner, substitutePlayerRef, Player.PlayerRole.Fighter, fighterSpawnPoint);
+                BasicSpawner.Instance.SpawnPlayer(runner, fighterPlayerRef, Player.PlayerRole.Fighter, fighterSpawnPoint);
             }
             else
             {
-                Debug.Log("Not enough players");
+                substitutePlayerRef = SelectRandomValidPlayerFromTeam(team);
+                if (substitutePlayerRef >= 0)
+                {
+                    BasicSpawner.Instance.SpawnPlayer(runner, substitutePlayerRef, Player.PlayerRole.Fighter, fighterSpawnPoint);
+                }
+                else
+                {
+                    Debug.Log("Not enough players");
+                }
             }
         }
 
@@ -115,7 +121,7 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
         for (int i = 0; i < team.Length; i++)
         {
             // Skipping the fighter
-            if (i != currentRound - 1)
+            if ((i != currentRound - 1) || spectatorOnly)
             {
                 int playerRef = team.Get(i);
 

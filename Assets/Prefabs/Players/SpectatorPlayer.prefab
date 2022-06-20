@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 453366791709333561}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.665, z: 0}
+  m_LocalPosition: {x: 0, y: 1.18, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -321,13 +321,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  cameraSensitivity: 90
+  cameraSensitivity: 10
   climbSpeed: 4
-  normalMoveSpeed: 15
+  normalMoveSpeed: 7
   slowMoveFactor: 0.25
   fastMoveFactor: 2
   droneHoverAudioSource: {fileID: 2781190208043874495}
   droneVelocityThreshold: 0.2
+  stationaryVolume: 0.2
+  movingVolume: 0.4
   avatar: {fileID: 3745020426575917451}
   camera: {fileID: 4575037479081972621}
   indicatorOnScreen: {fileID: 3632689179241203072}
@@ -357,6 +359,7 @@ MonoBehaviour:
   _canMove:
     _value: 0
   _speed: 0
+  spawnPoint: {fileID: 0}
 --- !u!143 &7287915281428922241
 CharacterController:
   m_ObjectHideFlags: 0
@@ -366,7 +369,7 @@ CharacterController:
   m_GameObject: {fileID: 1449721347038737993}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Height: 1
   m_Radius: 0.7
