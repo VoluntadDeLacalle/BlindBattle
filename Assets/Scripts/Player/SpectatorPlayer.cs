@@ -215,31 +215,7 @@ public class SpectatorPlayer : NetworkBehaviour, INetworkRunnerCallbacks
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-        var data = new NetworkInputData();
-        data.direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        data.mouseInput = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-
-        if (Input.GetButton("Run"))
-        {
-            data.buttons |= NetworkInputData.FAST;
-        }
-
-        if (Input.GetButton("Crouch"))
-        {
-            data.buttons |= NetworkInputData.SLOW;
-        }
-
-        if (Input.GetButton("Climb"))
-        {
-            data.buttons |= NetworkInputData.CLIMB;
-        }
-
-        if (Input.GetButton("Descend"))
-        {
-            data.buttons |= NetworkInputData.DESCEND;
-        }
-
-        input.Set(data);
+        //
     }
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)

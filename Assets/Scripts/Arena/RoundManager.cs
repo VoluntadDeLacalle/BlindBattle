@@ -11,6 +11,8 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
 
     public int currentRound => NetworkGameState.Instance.currentRound;
 
+    private bool shootKeyPressed = false;
+
     private new void Awake()
     {
         base.Awake();
@@ -30,6 +32,8 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
         {
             return;
         }
+
+        shootKeyPressed = shootKeyPressed || Input.GetButtonDown("Fire1");
 
         if (NetworkManager.Instance.IsHost)
         {
@@ -186,7 +190,37 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-        //
+        var data = new NetworkInputData();
+        data.direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        data.mouseInput = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+
+        if (shootKeyPressed)
+        {
+            data.buttons |= NetworkInputData.SHOOT;
+        }
+        shootKeyPressed = false;
+
+        if (Input.GetButton("Run"))
+        {
+            data.buttons |= NetworkInputData.FAST;
+        }
+
+        if (Input.GetButton("Crouch"))
+        {
+            data.buttons |= NetworkInputData.SLOW;
+        }
+
+        if (Input.GetButton("Climb"))
+        {
+            data.buttons |= NetworkInputData.CLIMB;
+        }
+
+        if (Input.GetButton("Descend"))
+        {
+            data.buttons |= NetworkInputData.DESCEND;
+        }
+
+        input.Set(data);
     }
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
