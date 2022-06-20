@@ -147,12 +147,22 @@ public class SpectatorPlayer : NetworkBehaviour, INetworkRunnerCallbacks
 
     public override void FixedUpdateNetwork()
     {
+        Move();
+    }
+
+    private void Move()
+    {
         if (GetInput(out NetworkInputData data) && canMove)
         {
+            if (!Object.HasStateAuthority && !Runner.IsFirstTick)
+            {
+                return;
+            }
+
             rotationX += data.mouseInput.x * cameraSensitivity * Runner.DeltaTime;
             rotationY += data.mouseInput.y * cameraSensitivity * Runner.DeltaTime;
             rotationY = Mathf.Clamp(rotationY, -90, 90);
-
+            
             transform.localRotation = Quaternion.AngleAxis(rotationX, Vector3.up);
             transform.localRotation *= Quaternion.AngleAxis(rotationY, Vector3.left);
 

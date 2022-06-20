@@ -321,9 +321,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  cameraSensitivity: 10
+  cameraSensitivity: 60
   climbSpeed: 4
-  normalMoveSpeed: 7
+  normalMoveSpeed: 12
   slowMoveFactor: 0.25
   fastMoveFactor: 2
   droneHoverAudioSource: {fileID: 2781190208043874495}
