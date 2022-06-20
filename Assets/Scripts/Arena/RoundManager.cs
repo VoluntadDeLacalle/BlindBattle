@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunnerCallbacks
 {
@@ -12,6 +13,7 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
 
     public int currentRound => NetworkGameState.Instance.currentRound;
 
+    private PlayerInput playerInput;
     private bool shootKeyPressed = false;
 
     private new void Awake()
@@ -24,6 +26,8 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
     {
         RegisterRunnerCallbacks();
         HelperUtilities.UpdateCursorLock(true);
+
+        playerInput = GetComponent<PlayerInput>();
     }
 
     // Update is called once per frame
@@ -34,8 +38,8 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
             return;
         }
 
-        shootKeyPressed = shootKeyPressed || Input.GetButtonDown("Fire1");
-
+        shootKeyPressed = shootKeyPressed || playerInput.actions["Fire"].triggered;
+        
         if (NetworkManager.Instance.IsHost)
         {
             if (NetworkGameState.Instance.gameTimer.Expired(NetworkManager.Instance.networkRunner))
@@ -206,8 +210,10 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
         var data = new NetworkInputData();
-        data.direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        data.mouseInput = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        var inputDirection = playerInput.actions["Move"].ReadValue<Vector2>();
+        Debug.Log(inputDirection);
+        data.direction = new Vector3(inputDirection.x, 0, inputDirection.y);
+        data.mouseInput = playerInput.actions["Look"].ReadValue<Vector2>();
 
         if (shootKeyPressed)
         {
@@ -215,22 +221,22 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
         }
         shootKeyPressed = false;
 
-        if (Input.GetButton("Run"))
+        if (playerInput.actions["DroneFast"].triggered)
         {
             data.buttons |= NetworkInputData.FAST;
         }
 
-        if (Input.GetButton("Crouch"))
+        if (playerInput.actions["DroneSlow"].triggered)
         {
             data.buttons |= NetworkInputData.SLOW;
         }
 
-        if (Input.GetButton("Climb"))
+        if (playerInput.actions["DroneAscend"].triggered)
         {
             data.buttons |= NetworkInputData.CLIMB;
         }
 
-        if (Input.GetButton("Descend"))
+        if (playerInput.actions["DroneDescend"].triggered)
         {
             data.buttons |= NetworkInputData.DESCEND;
         }
