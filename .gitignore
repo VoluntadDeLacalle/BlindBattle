@@ -63,3 +63,5 @@ sysinfo.txt
 crashlytics-build.properties
 
 \UserSettings\EditorUserSettings.asset
+Assets/SineVFX/TranslucentCrystals/_SRP/TranslucentCrystals_HDRP_Patch.unitypackage.meta
+Assets/SineVFX/TranslucentCrystals/_SRP/TranslucentCrystals_URP_Patch.unitypackage.meta
