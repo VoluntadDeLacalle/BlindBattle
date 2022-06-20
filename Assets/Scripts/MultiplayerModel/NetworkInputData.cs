@@ -3,7 +3,7 @@ using UnityEngine;
 
 public struct NetworkInputData : INetworkInput
 {
-    public const byte SPACEBAR = 1;
+    public const byte SHOOT = 1;
     public const byte SLOW = 1 << 1;
     public const byte FAST = 1 << 2;
     public const byte CLIMB = 1 << 3;

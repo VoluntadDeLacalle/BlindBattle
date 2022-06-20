@@ -215,7 +215,7 @@ public class NetworkGameState : NetworkBehaviour, INetworkRunnerCallbacks
         return validUsers;
     }
 
-    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All, InvokeLocal = true)]
     public void RPC_PlayAt(string audioClipName, Vector3 position, float maxDistance = 30)
     {
         AudioClip audioClip = SoundEffectsManager.Instance.GetClip(audioClipName);

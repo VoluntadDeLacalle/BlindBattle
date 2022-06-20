@@ -48,7 +48,6 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 
     private float xRotation = 0f;
     private Vector2 mouseInput = Vector2.zero;
-    private bool shootKeyPressed = false;
 
     private NetworkCharacterControllerPrototype networkCharCon;
     private NetworkObject playerNetworkObject;
@@ -176,8 +175,6 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 
     void Update()
     {
-        shootKeyPressed = shootKeyPressed || Input.GetButtonDown("Fire1");
-
         if (speed > footstepMagnitudeThreshold)
         {
             if (!footstepAudioSource.isPlaying)
@@ -190,6 +187,15 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
             if (footstepAudioSource.isPlaying)
             {
                 footstepAudioSource.Pause();
+            }
+        }
+
+        if(Object.HasInputAuthority && Input.GetButtonDown("Fire1"))
+        {
+            bool gunFireStatus = playerGun.CanShoot();
+            if (!gunFireStatus)
+            {
+                SoundEffectsManager.Instance.Play(playerGun.gunEmptySFXName);
             }
         }
     }
@@ -225,18 +231,13 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
             }
 
             ///Firing the gun
-            if ((data.buttons & NetworkInputData.SPACEBAR) != 0 && playerNetworkObject.HasInputAuthority && playerRole == PlayerRole.Fighter)
+            if ((data.buttons & NetworkInputData.SHOOT) != 0 && playerNetworkObject.HasInputAuthority && playerRole == PlayerRole.Fighter)
             {
                 bool gunFireStatus = playerGun.CanShoot();
-                Debug.Log($"{gameObject.name} fire status: {gunFireStatus}");
                 if (gunFireStatus)
                 {
                     RPC_AnimationTrigger("ShootTrigger");
-                    NetworkGameState.Instance.RPC_PlayAt(playerGun.gunFireSFXName, transform.position, 100);
-                }
-                else
-                {
-                    SoundEffectsManager.Instance.Play(playerGun.gunEmptySFXName);
+                    NetworkGameState.Instance.RPC_PlayAt(playerGun.gunFireSFXName, transform.position, 300);
                 }
 
                 LagCompensatedHit raycastHit;
@@ -306,17 +307,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-        var data = new NetworkInputData();
-        data.direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        data.mouseInput = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-
-        if (shootKeyPressed)
-        {
-            data.buttons |= NetworkInputData.SPACEBAR;
-        }
-        shootKeyPressed = false;
-
-        input.Set(data);
+        //
     }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }

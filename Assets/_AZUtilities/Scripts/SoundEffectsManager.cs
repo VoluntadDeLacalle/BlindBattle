@@ -64,10 +64,8 @@ public class SoundEffectsManager : SingletonMonoBehaviour<SoundEffectsManager>
 
     public void PlayAt(AudioClip audioClip, Vector3 position, float maxDistance)
     {
-        NetworkManager.Instance.networkRunner.Spawn(SFX3DPrefab, position, Quaternion.identity, null, (Runner, o) =>
-        {
-            o.GetComponent<ThreeDimensionalSFX>().Init(audioClip, maxDistance);
-        });
+        var o = Instantiate(SFX3DPrefab, position, Quaternion.identity);
+        o.GetComponent<ThreeDimensionalSFX>().Init(audioClip, maxDistance);
     }
 
     public AudioClip GetClip(string key)
