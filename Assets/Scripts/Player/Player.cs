@@ -6,15 +6,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class FogSettings
-{
-    public Color color;
-    public FogMode mode;
-    public float density;
-    public float start;
-    public float end;
-}
-
 public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 {
     public enum PlayerRole
@@ -50,9 +41,6 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     public IndicatorIconStyle team2IndicatorStyle;
     public IndicatorArrowStyle team2IndicatorArrowStyle;
 
-    [Header("Blindness")]
-    public FogSettings fogSettings;
-
     [Header("Player SFX Names & Varibles")]
     [SerializeField] private AudioSource footstepAudioSource;
     [SerializeField] private string thudSFXName;
@@ -82,13 +70,14 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     {
         NetworkManager.Instance.networkRunner.AddCallbacks(this);
 
+        var camera = FPCameraRef.GetPlayerCamera();
         if (Runner.LocalPlayer == Object.InputAuthority)
         {
-            ActivateFog();
+            RenderSettings.fog = true;
 
             indicatorOnScreen.visible = false;
             indicatorOffScreen.visible = false;
-            var camera = FPCameraRef.GetPlayerCamera();
+
             camera.gameObject.SetActive(true);
             HUD.Instance.SetCameraForIndicator(camera);
             // We don't show indicators if the current player is in the pit
@@ -96,18 +85,9 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
         }
         else
         {
+            camera.gameObject.SetActive(false);
             SetupIndicators();
         }
-    }
-
-    void ActivateFog()
-    {
-        RenderSettings.fog = true;
-        RenderSettings.fogColor = fogSettings.color;
-        RenderSettings.fogMode = fogSettings.mode;
-        RenderSettings.fogDensity = fogSettings.density;
-        RenderSettings.fogStartDistance = fogSettings.start;
-        RenderSettings.fogEndDistance = fogSettings.end;
     }
 
     void SetupIndicators()
@@ -181,13 +161,13 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
                 changed.Behaviour.FPCameraRef.GetPlayerCamera().gameObject.transform.localRotation = Quaternion.Euler(Vector3.zero);
                 changed.Behaviour.xRotation = 0;
 
-                //changed.Behaviour.FPCameraRef.ToggleCameraBlindness(true);
+                changed.Behaviour.FPCameraRef.ToggleCameraBlindness(true);
 
                 break;
             case PlayerRole.Spectator:
                 changed.Behaviour.canMove = true;
 
-                //changed.Behaviour.FPCameraRef.ToggleCameraBlindness(false);
+                changed.Behaviour.FPCameraRef.ToggleCameraBlindness(false);
 
                 break;
             case PlayerRole.Dead:
