@@ -72,6 +72,11 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
             networkCharCon.TeleportToPositionRotation(spawnPoint.position, spawnPoint.rotation);
         }
 
+        if (Object.HasStateAuthority && Object.HasInputAuthority)
+        {
+            avatar.SetLayerRecursively(LayerMask.NameToLayer("Host"));
+        }
+
         var camera = FPCameraRef.GetPlayerCamera();
         if (Runner.LocalPlayer == Object.InputAuthority)
         {

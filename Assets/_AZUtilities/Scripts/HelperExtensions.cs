@@ -92,6 +92,14 @@ public static class HelperExtensions
         }
     }
 
+    public static void SetLayerRecursively(this GameObject obj, int layer)
+    {
+        foreach (Transform trans in obj.GetComponentsInChildren<Transform>(true))
+        {
+            trans.gameObject.layer = layer;
+        }
+    }
+
     #endregion
 
     #region Transform
@@ -190,9 +198,9 @@ public static class HelperExtensions
     {
         var result = new List<Vector3>();
         for (int x = -1; x <= 1; x += 2)
-        for (int y = -1; y <= 1; y += 2)
-        for (int z = -1; z <= 1; z += 2)
-            result.Add((includePosition ? obj.center : Vector3.zero) + obj.extents.Times(new Vector3(x, y, z)));
+            for (int y = -1; y <= 1; y += 2)
+                for (int z = -1; z <= 1; z += 2)
+                    result.Add((includePosition ? obj.center : Vector3.zero) + obj.extents.Times(new Vector3(x, y, z)));
         return result;
     }
 
@@ -273,7 +281,7 @@ public static class HelperExtensions
 
     public static Bounds OrthographicBounds(this Camera camera)
     {
-        float screenAspect = (float) Screen.width / (float) Screen.height;
+        float screenAspect = (float)Screen.width / (float)Screen.height;
         float cameraHeight = camera.orthographicSize * 2;
         Bounds bounds = new Bounds(
             camera.transform.position,
