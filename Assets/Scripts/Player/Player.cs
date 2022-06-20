@@ -43,10 +43,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 
     [Header("Player SFX Names & Varibles")]
     [SerializeField] private AudioSource footstepAudioSource;
-    [SerializeField] private string thudSFXName;
 
-    private bool isColliding = false;
-    private bool wasColliding = false;
     private bool canMove = false;
 
     private float xRotation = 0f;
@@ -181,14 +178,6 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     {
         shootKeyPressed = shootKeyPressed || Input.GetButtonDown("Fire1");
 
-        if (isColliding && !wasColliding)
-        {
-            SoundEffectsManager.Instance.Play(thudSFXName);
-        }
-
-        wasColliding = isColliding;
-        isColliding = false;
-
         if (speed > footstepMagnitudeThreshold)
         {
             if (!footstepAudioSource.isPlaying)
@@ -209,18 +198,6 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     public void RPC_AnimationTrigger(string triggerName)
     {
         networkAnimator.SetTrigger(triggerName);
-    }
-
-    void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        var spectator = hit.collider.gameObject.GetComponent<SpectatorPlayer>();
-        if (!spectator)
-        {
-            if (hit.collider.gameObject.tag != "Floor")
-            {
-                isColliding = true;
-            }
-        }
     }
 
     public override void FixedUpdateNetwork()
