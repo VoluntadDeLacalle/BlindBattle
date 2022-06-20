@@ -77,14 +77,15 @@ public class SpectatorPlayer : NetworkBehaviour, INetworkRunnerCallbacks
 
         if (Runner.LocalPlayer != Object.InputAuthority)
         {
-            camera.gameObject.SetActive(false);
-            SetupIndicators();
+            indicatorOnScreen.visible = false;
+            indicatorOffScreen.visible = false;
+            RenderSettings.fog = false;
+            HUD.Instance.SetCameraForIndicator(camera);
         }
         else
         {
-            indicatorOnScreen.visible = false;
-            indicatorOffScreen.visible = false;
-            HUD.Instance.SetCameraForIndicator(camera);
+            camera.gameObject.SetActive(false);
+            SetupIndicators();
         }
     }
     public override void Despawned(NetworkRunner runner, bool hasState)
