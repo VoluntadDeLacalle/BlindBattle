@@ -1,12 +1,14 @@
-﻿using System;
+﻿using Fusion;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class SoundEffectsManager : SingletonMonoBehaviour<SoundEffectsManager>
 {
-    public AudioSource audioSource;
+    public AudioSource audioSource2D;
 
+    [SerializeField] private ThreeDimensionalSFX SFX3DPrefab;
     public List<AudioClip> soundEffects;
 
     private readonly Dictionary<string, AudioClip> soundEffectsDict = new Dictionary<string, AudioClip>();
@@ -40,13 +42,13 @@ public class SoundEffectsManager : SingletonMonoBehaviour<SoundEffectsManager>
         }
     }
 
-    public void PlayAt(string key, Vector3 position)
-    {
-        if (soundEffectsDict.ContainsKey(key))
-        {
-            PlayAt(soundEffectsDict[key], position);
-        }
-    }
+    //public void PlayAt(string key, Vector3 position)
+    //{
+    //    if (soundEffectsDict.ContainsKey(key))
+    //    {
+    //        PlayAt(soundEffectsDict[key], position);
+    //    }
+    //}
 
 
     public void Play(AudioClip audioClip)
@@ -56,20 +58,16 @@ public class SoundEffectsManager : SingletonMonoBehaviour<SoundEffectsManager>
             return;
         }
 
-        audioSource.spatialBlend = 0f;
-        audioSource.PlayOneShot(audioClip);
+        audioSource2D.spatialBlend = 0f;
+        audioSource2D.PlayOneShot(audioClip);
     }
 
-    public void PlayAt(AudioClip audioClip, Vector3 position)
+    public void PlayAt(AudioClip audioClip, Vector3 position, float maxDistance)
     {
-        if (audioClip == null)
+        NetworkManager.Instance.networkRunner.Spawn(SFX3DPrefab, position, Quaternion.identity, null, (Runner, o) =>
         {
-            return;
-        }
-
-        audioSource.spatialBlend = 1f;
-        audioSource.transform.position = position;
-        audioSource.PlayOneShot(audioClip);
+            o.GetComponent<ThreeDimensionalSFX>().Init(audioClip, maxDistance);
+        });
     }
 
     public AudioClip GetClip(string key)

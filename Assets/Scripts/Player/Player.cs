@@ -104,7 +104,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
                 break;
             case PlayerRole.Dead:
                 changed.Behaviour.canMove = false;
-                changed.Behaviour.networkAnimator.SetTrigger("DeathTrigger");
+                changed.Behaviour.RPC_AnimationTrigger("DeathTrigger");
 
                 break;
         }
@@ -113,6 +113,12 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     void Update()
     {
         shootKeyPressed = shootKeyPressed || Input.GetButtonDown("Fire1");
+    }
+
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.StateAuthority)]
+    public void RPC_AnimationTrigger(string triggerName)
+    {
+        networkAnimator.SetTrigger(triggerName);
     }
 
     public override void FixedUpdateNetwork()
@@ -141,9 +147,16 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
             ///Firing the gun
             if ((data.buttons & NetworkInputData.SPACEBAR) != 0 && playerNetworkObject.HasInputAuthority && playerRole == PlayerRole.Fighter)
             {
-                if (playerGun.CanShoot())
+                bool gunFireStatus = playerGun.CanShoot();
+                Debug.Log($"{gameObject.name} fire status: {gunFireStatus}");
+                if (gunFireStatus)
                 {
-                    networkAnimator.SetTrigger("ShootTrigger");
+                    RPC_AnimationTrigger("ShootTrigger");
+                    NetworkGameState.Instance.RPC_PlayAt(playerGun.gunFireSFXName, transform.position);
+                }
+                else
+                {
+                    SoundEffectsManager.Instance.Play(playerGun.gunEmptySFXName);
                 }
 
                 LagCompensatedHit raycastHit;
