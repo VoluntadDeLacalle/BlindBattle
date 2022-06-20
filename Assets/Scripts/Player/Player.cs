@@ -44,7 +44,6 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     [Header("Player SFX Names & Varibles")]
     [SerializeField] private AudioSource footstepAudioSource;
     [SerializeField] private string thudSFXName;
-    [SerializeField] private string victoryDingSFXName;
 
     private bool isColliding = false;
     private bool wasColliding = false;
@@ -285,7 +284,6 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
                         var destructible = raycastHit.Collider.GetComponentInParent<Destructible>();
                         if (destructible)
                         {
-                            SoundEffectsManager.Instance.Play(victoryDingSFXName);
                             destructible.RPC_Destroy(this);
                         }
                     }

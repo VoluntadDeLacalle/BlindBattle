@@ -16,6 +16,8 @@ public class SpectatorPlayer : NetworkBehaviour, INetworkRunnerCallbacks
 
     [SerializeField] private AudioSource droneHoverAudioSource;
     [SerializeField] private float droneVelocityThreshold = 0.2f;
+    [SerializeField] private float stationaryVolume = 0.2f;
+    [SerializeField] private float movingVolume = 0.4f;
 
     private float rotationX = 0.0f;
     private float rotationY = 0.0f;
@@ -43,7 +45,6 @@ public class SpectatorPlayer : NetworkBehaviour, INetworkRunnerCallbacks
         rb = GetComponent<Rigidbody>();
 
         droneHoverAudioSource.Play();
-        droneHoverAudioSource.Pause();
     }
 
     // Start is called before the first frame update
@@ -57,16 +58,16 @@ public class SpectatorPlayer : NetworkBehaviour, INetworkRunnerCallbacks
     {
         if (speed > droneVelocityThreshold)
         {
-            if (!droneHoverAudioSource.isPlaying)
+            if (droneHoverAudioSource.volume != movingVolume)
             {
-                droneHoverAudioSource.UnPause();
+                droneHoverAudioSource.volume = movingVolume;
             }
         }
         else
         {
-            if (droneHoverAudioSource.isPlaying)
+            if (droneHoverAudioSource.volume != stationaryVolume)
             {
-                droneHoverAudioSource.Pause();
+                droneHoverAudioSource.volume = stationaryVolume;
             }
         }
     }
