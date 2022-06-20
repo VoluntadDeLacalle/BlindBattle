@@ -492,8 +492,6 @@ MonoBehaviour:
     width: 16
     height: 16
   footstepAudioSource: {fileID: 2665895179238604853}
-  thudSFXName: Thud
-  victoryDingSFXName: VictoryDing
 --- !u!114 &7019054874757496614
 MonoBehaviour:
   m_ObjectHideFlags: 0

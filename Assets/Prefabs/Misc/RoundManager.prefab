@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1219898605951950399}
   - component: {fileID: 1631916059041316164}
   - component: {fileID: 9128878922461048339}
+  - component: {fileID: 8480017649935325217}
   m_Layer: 0
   m_Name: RoundManager
   m_TagString: Untagged
@@ -111,3 +112,61 @@ MonoBehaviour:
     - {fileID: 1156772893323870550, guid: 2548b4e2b24bfc94088208c7f2bf38ee, type: 3}
     - {fileID: 1659382156005664865, guid: 73a12e90a84b7674bb6228fabe0979af, type: 3}
   curSkeleton: {fileID: 0}
+--- !u!114 &8480017649935325217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5959941507894663471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 1f57cd8f939c222439717173e9aafebd, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 30a6c8ba-7e0f-4936-9e32-f448082c456a
+    m_ActionName: PlayerAction/Move
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f11c861b-a06f-4073-a54a-42c758dd7217
+    m_ActionName: PlayerAction/Look
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 27dcdf90-4093-4575-abff-8f9711eda11e
+    m_ActionName: PlayerAction/Fire
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c8761fd4-f44a-4f33-ac69-13494069b537
+    m_ActionName: PlayerAction/DroneFast
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 89edd65a-d89e-466e-b9f8-177834f1e266
+    m_ActionName: PlayerAction/DroneSlow
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e50982ee-230b-4b73-a638-74b7d658985c
+    m_ActionName: PlayerAction/DroneAscend
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: cd30ad73-5936-4c5f-9b2a-7b3ee96e298d
+    m_ActionName: PlayerAction/DroneDecend
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: PlayerAction
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
