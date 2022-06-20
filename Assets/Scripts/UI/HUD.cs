@@ -1,4 +1,5 @@
 using Fusion;
+using LincolnCpp.HUDIndicator;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,7 +16,6 @@ public class HUD : SingletonMonoBehaviour<HUD>
     public TMP_Text roundNameText;
     public TMP_Text timerText;
 
-
     public string mainMenuName;
     public string loadingSceneName;
 
@@ -28,6 +28,8 @@ public class HUD : SingletonMonoBehaviour<HUD>
 
     public List<GameObject> HostOnlyItems;
     public List<GameObject> ClientOnlyItems;
+
+    public IndicatorRenderer indicatorRenderer;
 
     // Start is called before the first frame update
     void Start()
@@ -70,6 +72,16 @@ public class HUD : SingletonMonoBehaviour<HUD>
         }
     }
 
+    public void ToggleIndicators(bool show)
+    {
+        indicatorRenderer.gameObject.SetActive(show);
+    }
+
+    public void SetCameraForIndicator(Camera camera)
+    {
+        indicatorRenderer.camera = camera;
+    }
+
     public void Pause()
     {
         HelperUtilities.UpdateCursorLock(false);
@@ -96,6 +108,8 @@ public class HUD : SingletonMonoBehaviour<HUD>
 
     public void ShowEndScreen()
     {
+        pauseScreen.SetActive(false);
+
         nextRoundPanel.SetActive(!NetworkGameState.Instance.IsLastRound());
         finalResultPanel.SetActive(NetworkGameState.Instance.IsLastRound());
 

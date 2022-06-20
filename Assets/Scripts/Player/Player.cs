@@ -1,5 +1,6 @@
 using Fusion;
 using Fusion.Sockets;
+using LincolnCpp.HUDIndicator;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -22,12 +23,21 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     [SerializeField] private PlayerCamera FPCameraRef;
     [SerializeField] private Gun playerGun;
     [SerializeField] private NetworkMecanimAnimator networkAnimator;
+    [SerializeField] private IndicatorOnScreen indicatorOnScreen;
+    [SerializeField] private IndicatorOffScreen indicatorOffScreen;
 
     [Header("Player Movement Variables")]
     [SerializeField] private float moveSpeed = 5;
     [SerializeField] private float mouseSensitivity = 60;
     [SerializeField] private float maxPitchValue = 30;
     [SerializeField] private float minPitchValue = -20;
+
+
+    [Header("Indicators")]
+    public IndicatorIconStyle team1IndicatorStyle;
+    public IndicatorArrowStyle team1IndicatorArrowStyle;
+    public IndicatorIconStyle team2IndicatorStyle;
+    public IndicatorArrowStyle team2IndicatorArrowStyle;
 
     private bool canMove = false;
 
@@ -47,6 +57,47 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     public override void Spawned()
     {
         NetworkManager.Instance.networkRunner.AddCallbacks(this);
+
+        if (Runner.LocalPlayer != Object.InputAuthority)
+        {
+            SetupIndicators();
+        }
+        else
+        {
+            indicatorOnScreen.visible = false;
+            indicatorOffScreen.visible = false;
+
+            HUD.Instance.SetCameraForIndicator(FPCameraRef.GetPlayerCamera());
+            // We don't show indicators if the current player is in the pit
+            HUD.Instance.ToggleIndicators(false);
+        }
+    }
+
+    void SetupIndicators()
+    {
+        IndicatorIconStyle selectedStyle = default;
+        IndicatorArrowStyle selectedArrowStyle = default;
+        var teamNum = NetworkGameState.Instance.GetPlayerTeamNumber(Object.InputAuthority);
+        switch (teamNum)
+        {
+            case 1:
+                selectedStyle = team1IndicatorStyle;
+                selectedArrowStyle = team1IndicatorArrowStyle;
+                break;
+            case 2:
+                selectedStyle = team2IndicatorStyle;
+                selectedArrowStyle = team1IndicatorArrowStyle;
+                break;
+        }
+
+        indicatorOnScreen.renderers.Add(HUD.Instance.indicatorRenderer);
+        indicatorOnScreen.style = selectedStyle;
+        indicatorOnScreen.ResetCanvas();
+
+        indicatorOffScreen.renderers.Add(HUD.Instance.indicatorRenderer);
+        indicatorOffScreen.style = selectedStyle;
+        indicatorOffScreen.arrowStyle = selectedArrowStyle;
+        indicatorOffScreen.ResetCanvas();
     }
 
     private void Start()

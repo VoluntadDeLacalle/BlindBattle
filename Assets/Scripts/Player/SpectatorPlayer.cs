@@ -1,5 +1,6 @@
 using Fusion;
 using Fusion.Sockets;
+using LincolnCpp.HUDIndicator;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +16,16 @@ public class SpectatorPlayer : NetworkBehaviour, INetworkRunnerCallbacks
 
     private float rotationX = 0.0f;
     private float rotationY = 0.0f;
+
+    [SerializeField] private new Camera camera;
+    [SerializeField] private IndicatorOnScreen indicatorOnScreen;
+    [SerializeField] private IndicatorOffScreen indicatorOffScreen;
+
+    [Header("Indicators")]
+    public IndicatorIconStyle team1IndicatorStyle;
+    public IndicatorArrowStyle team1IndicatorArrowStyle;
+    public IndicatorIconStyle team2IndicatorStyle;
+    public IndicatorArrowStyle team2IndicatorArrowStyle;
 
     [Networked] public NetworkBool canMove { get; set; }
 
@@ -43,10 +54,49 @@ public class SpectatorPlayer : NetworkBehaviour, INetworkRunnerCallbacks
     {
         NetworkManager.Instance.networkRunner.AddCallbacks(this);
         RPC_SwitchCanMove(true);
+
+        if (Runner.LocalPlayer != Object.InputAuthority)
+        {
+            camera.gameObject.SetActive(false);
+            SetupIndicators();
+        }
+        else
+        {
+            indicatorOnScreen.visible = false;
+            indicatorOffScreen.visible = false;
+            HUD.Instance.SetCameraForIndicator(camera);
+        }
     }
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
         runner.RemoveCallbacks(this);
+    }
+
+    void SetupIndicators()
+    {
+        IndicatorIconStyle selectedStyle = default;
+        IndicatorArrowStyle selectedArrowStyle = default;
+        var teamNum = NetworkGameState.Instance.GetPlayerTeamNumber(Object.InputAuthority);
+        switch (teamNum)
+        {
+            case 1:
+                selectedStyle = team1IndicatorStyle;
+                selectedArrowStyle = team1IndicatorArrowStyle;
+                break;
+            case 2:
+                selectedStyle = team2IndicatorStyle;
+                selectedArrowStyle = team1IndicatorArrowStyle;
+                break;
+        }
+
+        indicatorOnScreen.renderers.Add(HUD.Instance.indicatorRenderer);
+        indicatorOnScreen.style = selectedStyle;
+        indicatorOnScreen.ResetCanvas();
+
+        indicatorOffScreen.renderers.Add(HUD.Instance.indicatorRenderer);
+        indicatorOffScreen.style = selectedStyle;
+        indicatorOffScreen.arrowStyle = selectedArrowStyle;
+        indicatorOffScreen.ResetCanvas();
     }
 
     [Rpc(sources: RpcSources.All, targets: RpcTargets.StateAuthority)]
