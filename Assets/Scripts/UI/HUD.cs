@@ -171,6 +171,7 @@ public class HUD : SingletonMonoBehaviour<HUD>
 
         NetworkManager.Instance.networkRunner.SetActiveScene(loadingSceneName);
         await Task.Delay(TimeSpan.FromSeconds(3));
+        NetworkGameState.Instance.ResetTimer(RoundManager.Instance.roundDuration);
         NetworkManager.Instance.networkRunner.SetActiveScene(currentSceneName);
     }
 
