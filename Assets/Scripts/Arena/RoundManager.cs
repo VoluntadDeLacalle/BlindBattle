@@ -173,6 +173,15 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
         }
     }
 
+    public void ToggleDirectionalLightsShadows(bool show)
+    {
+        var directionalLights = Light.GetLights(LightType.Directional, LayerMask.NameToLayer("Default"));
+        foreach(var light in directionalLights)
+        {
+            light.shadows = show ? LightShadows.Soft : LightShadows.None;
+        }
+    }
+
     private void OnDestroy()
     {
         NetworkManager.Instance.networkRunner?.RemoveCallbacks(this);
