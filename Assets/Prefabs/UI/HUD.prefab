@@ -1570,6 +1570,7 @@ MonoBehaviour:
   timerText: {fileID: 7139316582608690327}
   mainMenuName: MainMenu
   loadingSceneName: LoadingScene
+  endRoundSFXName: Buzzer
   pauseScreen: {fileID: 9084481257382347196}
   endScreen: {fileID: 3264014497079459631}
   nextRoundPanel: {fileID: 6477108286319406884}

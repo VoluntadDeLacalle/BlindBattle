@@ -6,6 +6,7 @@ using UnityEngine;
 public class Destructible : NetworkBehaviour
 {
     public int value = 100;
+    public string destructibleSFXName;
 
     public bool isDestroyedInHost = false;
 
@@ -24,6 +25,8 @@ public class Destructible : NetworkBehaviour
     [Rpc(sources: RpcSources.All, targets: RpcTargets.StateAuthority)]
     public void RPC_Destroy(Player destroyedBy)
     {
+        NetworkGameState.Instance.RPC_PlayAt(destructibleSFXName, transform.position, 100);
+
         if (!isDestroyedInHost)
         {
             Runner.Despawn(Object);

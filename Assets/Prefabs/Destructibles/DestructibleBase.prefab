@@ -171,6 +171,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   value: 100
+  destructibleSFXName: DestructibleShatter
   isDestroyedInHost: 0
 --- !u!114 &2092243387930544506
 MonoBehaviour:

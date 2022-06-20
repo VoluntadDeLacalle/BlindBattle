@@ -16,6 +16,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     };
 
     [Networked(OnChanged = nameof(OnSwitchPlayerRole))] public PlayerRole playerRole { get; set; }
+    [Networked] public float speed { get; set; }
 
     [Header("Player Children Assets")]
     [SerializeField] private GameObject avatar;
@@ -28,7 +29,15 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     [SerializeField] private float mouseSensitivity = 60;
     [SerializeField] private float maxPitchValue = 30;
     [SerializeField] private float minPitchValue = -20;
+    [SerializeField] private float footstepMagnitudeThreshold = 0.2f;
 
+    [Header("Player SFX Names & Varibles")]
+    [SerializeField] private AudioSource footstepAudioSource;
+    [SerializeField] private string thudSFXName;
+    [SerializeField] private string victoryDingSFXName;
+
+    private bool isColliding = false;
+    private bool wasColliding = false;
     private bool canMove = false;
 
     private float xRotation = 0f;
@@ -42,6 +51,9 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     {
         networkCharCon = GetComponent<NetworkCharacterControllerPrototype>();
         playerNetworkObject = GetComponent<NetworkObject>();
+
+        footstepAudioSource.Play();
+        footstepAudioSource.Pause();
     }
 
     public override void Spawned()
@@ -113,12 +125,47 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     void Update()
     {
         shootKeyPressed = shootKeyPressed || Input.GetButtonDown("Fire1");
+
+        if (isColliding && !wasColliding)
+        {
+            SoundEffectsManager.Instance.Play(thudSFXName);
+        }
+
+        wasColliding = isColliding;
+        isColliding = false;
+
+        if (speed > footstepMagnitudeThreshold)
+        {
+            if (!footstepAudioSource.isPlaying)
+            {
+                footstepAudioSource.UnPause();
+            }
+        }
+        else
+        {
+            if (footstepAudioSource.isPlaying)
+            {
+                footstepAudioSource.Pause();
+            }
+        }
     }
 
     [Rpc(sources: RpcSources.All, targets: RpcTargets.StateAuthority)]
     public void RPC_AnimationTrigger(string triggerName)
     {
         networkAnimator.SetTrigger(triggerName);
+    }
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        var spectator = hit.collider.gameObject.GetComponent<SpectatorPlayer>();
+        if (!spectator)
+        {
+            if (hit.collider.gameObject.tag != "Floor")
+            {
+                isColliding = true;
+            }
+        }
     }
 
     public override void FixedUpdateNetwork()
@@ -132,6 +179,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
             data.direction.Normalize();
             Vector3 worldData = transform.localToWorldMatrix * data.direction;
             networkCharCon.Move(moveSpeed * worldData * Runner.DeltaTime);
+            speed = networkCharCon.Velocity.magnitude;
 
             float mouseX = data.mouseInput.x * mouseSensitivity * Runner.DeltaTime;
             float mouseY = data.mouseInput.y * mouseSensitivity * Runner.DeltaTime;
@@ -152,7 +200,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
                 if (gunFireStatus)
                 {
                     RPC_AnimationTrigger("ShootTrigger");
-                    NetworkGameState.Instance.RPC_PlayAt(playerGun.gunFireSFXName, transform.position);
+                    NetworkGameState.Instance.RPC_PlayAt(playerGun.gunFireSFXName, transform.position, 100);
                 }
                 else
                 {
@@ -181,6 +229,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
                         var destructible = raycastHit.Collider.GetComponentInParent<Destructible>();
                         if (destructible)
                         {
+                            SoundEffectsManager.Instance.Play(victoryDingSFXName);
                             destructible.RPC_Destroy(this);
                         }
                     }

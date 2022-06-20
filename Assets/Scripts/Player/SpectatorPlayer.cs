@@ -13,10 +13,14 @@ public class SpectatorPlayer : NetworkBehaviour, INetworkRunnerCallbacks
     public float slowMoveFactor = 0.25f;
     public float fastMoveFactor = 3;
 
+    [SerializeField] private AudioSource droneHoverAudioSource;
+    [SerializeField] private float droneVelocityThreshold = 0.2f;
+
     private float rotationX = 0.0f;
     private float rotationY = 0.0f;
 
     [Networked] public NetworkBool canMove { get; set; }
+    [Networked] public float speed { get; set; }
 
     private CharacterController charCon;
     private Rigidbody rb;
@@ -25,6 +29,9 @@ public class SpectatorPlayer : NetworkBehaviour, INetworkRunnerCallbacks
     {
         charCon = GetComponent<CharacterController>();
         rb = GetComponent<Rigidbody>();
+
+        droneHoverAudioSource.Play();
+        droneHoverAudioSource.Pause();
     }
 
     // Start is called before the first frame update
@@ -36,7 +43,20 @@ public class SpectatorPlayer : NetworkBehaviour, INetworkRunnerCallbacks
     // Update is called once per frame
     void Update()
     {
-
+        if (speed > droneVelocityThreshold)
+        {
+            if (!droneHoverAudioSource.isPlaying)
+            {
+                droneHoverAudioSource.UnPause();
+            }
+        }
+        else
+        {
+            if (droneHoverAudioSource.isPlaying)
+            {
+                droneHoverAudioSource.Pause();
+            }
+        }
     }
 
     public override void Spawned()
@@ -103,6 +123,7 @@ public class SpectatorPlayer : NetworkBehaviour, INetworkRunnerCallbacks
 
             Vector3 worldDir = transform.TransformDirection(moveDir.normalized);
             charCon.Move(normalMoveSpeed * factor * worldDir * Runner.DeltaTime);
+            speed = charCon.velocity.magnitude;
         }
     }
 
