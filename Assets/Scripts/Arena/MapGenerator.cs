@@ -48,6 +48,11 @@ public class MapGenerator : SingletonMonoBehaviour<MapGenerator>
 
     void PlaceDestructible(Destructible destructiblePrefab, Transform spawnPoint)
     {
+        if (NetworkGameState.Instance.gameStyle == GameStyle.Battle)
+        {
+            return;
+        }
+
         NetworkManager.Instance.networkRunner.Spawn(destructiblePrefab, spawnPoint.position, spawnPoint.rotation);
     }
 }

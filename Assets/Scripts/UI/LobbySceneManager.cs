@@ -151,11 +151,21 @@ public class LobbySceneManager : MonoBehaviour, INetworkRunnerCallbacks
         NetworkGameState.Instance?.ResetTeams();
     }
 
-    public void StartGame()
+    public void StartGame(int mode)
     {
         if (networkRunner.GameMode != GameMode.Host)
         {
             return;
+        }
+
+        switch(mode)
+        {
+            case 1:
+                NetworkGameState.Instance.SetGameStyle(GameStyle.Battle);
+                break;
+            default:
+                NetworkGameState.Instance.SetGameStyle(GameStyle.Classic);
+                break;
         }
 
         networkRunner.SetActiveScene(arenaSceneName);

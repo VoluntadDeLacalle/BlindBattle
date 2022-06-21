@@ -34,16 +34,19 @@ public class BasicSpawner : SingletonMonoBehaviour<BasicSpawner>, INetworkRunner
     {
         await Task.Delay(TimeSpan.FromSeconds(delay));
 
+        // Randomizing respawn location to prevent spawn killing
+        Transform spawnPoint;
+        if (UnityEngine.Random.Range(0, 10) < 5)
+        {
+            spawnPoint = MapGenerator.Instance.curSkeleton.player1Spawn;
+        } else
+        {
+            spawnPoint = MapGenerator.Instance.curSkeleton.player2Spawn;
+        }
+
         Debug.Log("Respawning!");
         var teamNum = NetworkGameState.Instance.GetPlayerTeamNumber(playerRef);
-        if (teamNum == 1)
-        {
-            SpawnPlayer(NetworkManager.Instance.networkRunner, playerRef, curPlayerRole, MapGenerator.Instance.curSkeleton.player1Spawn);
-        }
-        else if (teamNum == 2)
-        {
-            SpawnPlayer(NetworkManager.Instance.networkRunner, playerRef, curPlayerRole, MapGenerator.Instance.curSkeleton.player2Spawn);
-        }
+        SpawnPlayer(NetworkManager.Instance.networkRunner, playerRef, curPlayerRole, spawnPoint);
     }
 
     public SpectatorPlayer SpawnSpectatorPlayer(NetworkRunner runner, PlayerRef playerRef, Transform spawnPoint)

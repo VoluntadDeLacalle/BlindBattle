@@ -182,6 +182,8 @@ public class RoundManager : SingletonMonoBehaviour<RoundManager>, INetworkRunner
                 spectatorPlayer.RPC_SwitchCanMove(false);
             }
         }
+
+        NetworkGameState.Instance.RPC_ShowEndScreen();
     }
 
     public void ToggleDirectionalLightsShadows(bool show)

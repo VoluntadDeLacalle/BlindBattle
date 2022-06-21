@@ -43,7 +43,9 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
 
     [Header("Player SFX Names & Varibles")]
     [SerializeField] private AudioSource footstepAudioSource;
-    
+
+    [SerializeField] private int playerKillScore;
+
     private Transform spawnPoint = null;
 
     private bool canMove = false;
@@ -274,7 +276,7 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
                         if (player)
                         {
                             // TODO: Wait, and then respawn
-                            player.RPC_Respawn();
+                            player.RPC_PlayerDied(Object.InputAuthority);
                         }
                     }
                     else //Hit a static object with a normal collider
@@ -294,9 +296,19 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
     }
 
     [Rpc(sources: RpcSources.All, targets: RpcTargets.StateAuthority)]
-    void RPC_Respawn()
+    void RPC_PlayerDied(PlayerRef killedBy)
     {
-        DieAndRespawn();
+        NetworkGameState.Instance.AddScoreToPlayer(playerKillScore, killedBy);
+
+        switch(NetworkGameState.Instance.gameStyle)
+        {
+            case GameStyle.Classic:
+                DieAndRespawn();
+                break;
+            case GameStyle.Battle:
+                DieAndMoveToNextRound();
+                break;
+        }
     }
 
     private async void DieAndRespawn()
@@ -311,6 +323,18 @@ public class Player : NetworkBehaviour, INetworkRunnerCallbacks
         Runner.Despawn(Object);
 
         BasicSpawner.Instance.SpawnAfterDelay(playerRef, curPlayerRole, 1);
+    }
+
+    private async void DieAndMoveToNextRound()
+    {
+        var playerRef = Object.InputAuthority;
+        var curPlayerRole = playerRole;
+
+        RPC_SwitchPlayerRole(PlayerRole.Dead);
+
+        await Task.Delay(TimeSpan.FromSeconds(3));
+
+        RoundManager.Instance.EndRound();
     }
 
     private void LateUpdate()

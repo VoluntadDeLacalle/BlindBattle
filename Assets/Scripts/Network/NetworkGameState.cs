@@ -5,6 +5,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Since GameMode is already taken
+public enum GameStyle
+{
+    Classic,
+    Battle
+}
+
 public class NetworkGameState : NetworkBehaviour, INetworkRunnerCallbacks
 {
     public static NetworkGameState Instance;
@@ -26,6 +33,9 @@ public class NetworkGameState : NetworkBehaviour, INetworkRunnerCallbacks
 
     [Networked]
     public TickTimer gameTimer { get; set; }
+
+    [Networked]
+    public GameStyle gameStyle { get; set; }
 
     private void Awake()
     {
@@ -61,6 +71,11 @@ public class NetworkGameState : NetworkBehaviour, INetworkRunnerCallbacks
         currentRound = 1;
         team1Score = 0;
         team2Score = 0;
+    }
+
+    public void SetGameStyle(GameStyle style)
+    {
+        gameStyle = style;
     }
 
     public void ResetTimer(float seconds)
@@ -237,6 +252,12 @@ public class NetworkGameState : NetworkBehaviour, INetworkRunnerCallbacks
         }
         
         SoundEffectsManager.Instance.Play(audioClip);
+    }
+
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
+    public void RPC_ShowEndScreen()
+    {
+        HUD.Instance.ShowEndScreen();
     }
 
     private void OnDestroy()

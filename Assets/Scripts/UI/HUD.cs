@@ -56,21 +56,6 @@ public class HUD : SingletonMonoBehaviour<HUD>
             var teamNum = NetworkGameState.Instance.GetPlayerTeamNumber(NetworkManager.Instance.networkRunner.LocalPlayer);
             team1PlayerIndicator.SetActive(teamNum == 1);
             team2PlayerIndicator.SetActive(teamNum == 2);
-
-            if (NetworkGameState.Instance.gameTimer.Expired(NetworkManager.Instance.networkRunner))
-            {
-                if (!endScreen.activeSelf)
-                {
-                    ShowEndScreen();
-                }
-            }
-            else
-            {
-                if (endScreen.activeSelf)
-                {
-                    endScreen.SetActive(false);
-                }
-            }
         }
 
         if (RoundManager.Instance.playerInput.actions["Pause"].triggered)

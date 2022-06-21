@@ -23,6 +23,7 @@ public class HostOrJoinDevUI : MonoBehaviour
 
     public bool singleTeam = false;
     public bool spectatorOnly = false;
+    public GameStyle gameStyle = GameStyle.Classic;
 
     [Button("Reset Teams [Host Only]", "ResetTeams")]
     public bool btn_ResetTeams;
@@ -73,6 +74,7 @@ public class HostOrJoinDevUI : MonoBehaviour
     {
         if (NetworkManager.Instance.IsHost)
         {
+            NetworkGameState.Instance.SetGameStyle(gameStyle);
             RoundManager.Instance.StartRound(spectatorOnly);
         }
         else
